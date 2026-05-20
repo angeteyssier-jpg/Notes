@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Gestion de Notes - Ultime</title>
+    <title>Mes Notes</title>
     <style>
         :root {
             --primary: #007AFF;
@@ -107,14 +107,14 @@
             outline: none;
         }
 
-        #address-list {
+        #notes-list {
             flex: 1;
             overflow-y: auto;
             padding: 8px;
             padding-bottom: 80px;
         }
 
-        .address-item {
+        .note-item {
             background-color: var(--card-bg);
             padding: 12px 15px;
             margin-bottom: 6px;
@@ -125,7 +125,7 @@
             align-items: center;
             gap: 12px;
         }
-        .address-item:active { transform: scale(0.98); background-color: #f0f0f0; }
+        .note-item:active { transform: scale(0.98); background-color: #f0f0f0; }
         
         .fav-icon {
             color: var(--warning);
@@ -138,8 +138,8 @@
         .fav-icon.visible { visibility: visible; }
 
         .item-content { flex: 1; min-width: 0; }
-        .address-title { font-weight: 600; font-size: 16px; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .item-preview { font-size: 13px; color: var(--text-sec); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .note-title { font-weight: 600; font-size: 16px; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .note-preview { font-size: 13px; color: var(--text-sec); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         .fab {
             position: fixed;
@@ -340,7 +340,7 @@
             </div>
             <input type="text" id="search-bar" placeholder="Rechercher dans titres et textes...">
         </header>
-        <div id="address-list"></div>
+        <div id="notes-list"></div>
         <button class="fab" onclick="openForm()">+</button>
     </div>
 
@@ -359,7 +359,7 @@
             <div class="section-label">Contenu de la note</div>
             <div class="detail-box-info" id="d-info"></div>
 
-            <button class="btn-delete-small" onclick="deleteCurrentAddress()">Supprimer cette note</button>
+            <button class="btn-delete-small" onclick="deleteCurrentNote()">Supprimer cette note</button>
         </div>
     </div>
 
@@ -393,7 +393,7 @@
                 <textarea id="f-info" class="form-textarea" placeholder="Écrivez votre note ici..."></textarea>
             </div>
 
-            <button class="btn-save" onclick="saveAddress()">Enregistrer</button>
+            <button class="btn-save" onclick="saveNote()">Enregistrer</button>
         </div>
     </div>
 
@@ -413,20 +413,25 @@
     <input type="file" id="file-input" accept=".json" onchange="importData(this)">
 
     <script>
-        let addresses = []; // On garde le nom de variable pour la compatibilité, mais ce sont des notes
+        // VARIABLES INDÉPENDANTES
+        let notes = [];
         let categories = [];
         const DEFAULT_CAT_NAME = "Aucune catégorie";
         let currentId = null;
 
+        // CLÉS DE STOCKAGE UNIQUES
+        const STORAGE_NOTES = 'myNotesData_v1';
+        const STORAGE_CATS = 'myNotesCats_v1';
+
         function init() {
-            const storedAddr = localStorage.getItem('myNotes');
-            const storedCat = localStorage.getItem('myNotesCategories');
+            const storedNotes = localStorage.getItem(STORAGE_NOTES);
+            const storedCats = localStorage.getItem(STORAGE_CATS);
 
-            if (storedAddr) addresses = JSON.parse(storedAddr);
-            else addresses = [];
+            if (storedNotes) notes = JSON.parse(storedNotes);
+            else notes = [];
 
-            if (storedCat) {
-                categories = JSON.parse(storedCat);
+            if (storedCats) {
+                categories = JSON.parse(storedCats);
                 if (!categories.find(c => c.name === DEFAULT_CAT_NAME)) {
                     categories.unshift({ id: Date.now(), name: DEFAULT_CAT_NAME });
                 }
@@ -434,7 +439,6 @@
                 categories = [{ id: 1, name: DEFAULT_CAT_NAME }];
             }
 
-            migrateData();
             updateCatSelects();
             
             const defaultCat = categories.find(c => c.name === DEFAULT_CAT_NAME);
@@ -445,29 +449,9 @@
             renderList();
         }
 
-        function migrateData() {
-            let changed = false;
-            addresses.forEach(addr => {
-                if (addr.isFav === undefined) { addr.isFav = false; changed = true; }
-                // Nettoyage des anciens champs inutiles pour les notes
-                if (addr.query) { delete addr.query; changed = true; }
-                if (addr.phone1) { delete addr.phone1; changed = true; }
-                if (addr.phone2) { delete addr.phone2; changed = true; }
-                if (addr.email1) { delete addr.email1; changed = true; }
-                if (addr.email2) { delete addr.email2; changed = true; }
-                
-                if (!addr.categoryId) {
-                    const defaultCat = categories.find(c => c.name === DEFAULT_CAT_NAME);
-                    addr.categoryId = defaultCat ? defaultCat.id : categories[0].id;
-                    changed = true;
-                }
-            });
-            if (changed) saveAll();
-        }
-
         function saveAll() {
-            localStorage.setItem('myNotes', JSON.stringify(addresses));
-            localStorage.setItem('myNotesCategories', JSON.stringify(categories));
+            localStorage.setItem(STORAGE_NOTES, JSON.stringify(notes));
+            localStorage.setItem(STORAGE_CATS, JSON.stringify(categories));
             updateCatSelects();
             renderList();
         }
@@ -505,11 +489,10 @@
         }
 
         function renderList() {
-            const listContainer = document.getElementById('address-list');
+            const listContainer = document.getElementById('notes-list');
             const filterCat = document.getElementById('cat-filter').value;
             const rawSearchText = document.getElementById('search-bar').value;
             
-            // Normalisation pour gérer les accents
             const searchText = rawSearchText.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
 
             listContainer.innerHTML = '';
@@ -518,28 +501,24 @@
 
             // --- CAS 1 : RECHERCHE ACTIVE ---
             if (searchText !== "") {
-                // On ignore la catégorie. On cherche dans le TITRE ET le TEXTE.
-                finalList = addresses.filter(addr => {
-                    const titleNorm = (addr.title || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                    const infoNorm = (addr.info || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                    
+                finalList = notes.filter(note => {
+                    const titleNorm = (note.title || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                    const infoNorm = (note.info || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
                     return titleNorm.includes(searchText) || infoNorm.includes(searchText);
                 });
-
                 finalList.sort((a, b) => a.title.localeCompare(b.title, 'fr', { sensitivity: 'base' }));
             } 
-            
             // --- CAS 2 : RECHERCHE VIDE ---
             else {
-                // 1. TOUS LES FAVORIS (Le filtre catégorie est ignoré pour les favoris)
-                const favorites = addresses.filter(addr => addr.isFav);
+                // 1. TOUS LES FAVORIS (Ignore le filtre catégorie)
+                const favorites = notes.filter(note => note.isFav);
                 favorites.sort((a, b) => a.title.localeCompare(b.title, 'fr', { sensitivity: 'base' }));
 
-                // 2. LES AUTRES (Respectent le filtre catégorie)
-                const others = addresses.filter(addr => {
-                    if (addr.isFav) return false; 
+                // 2. LES AUTRES (Respecte le filtre catégorie)
+                const others = notes.filter(note => {
+                    if (note.isFav) return false; 
                     if (filterCat === 'all') return true;
-                    return addr.categoryId == filterCat;
+                    return note.categoryId == filterCat;
                 });
                 others.sort((a, b) => a.title.localeCompare(b.title, 'fr', { sensitivity: 'base' }));
 
@@ -551,36 +530,34 @@
                 return;
             }
 
-            finalList.forEach(addr => {
+            finalList.forEach(note => {
                 const item = document.createElement('div');
-                item.className = 'address-item';
+                item.className = 'note-item';
                 
-                const favStar = addr.isFav ? '★' : '☆';
-                const favClass = addr.isFav ? 'visible' : '';
-                
-                // Aperçu du texte dans la liste
-                const previewText = addr.info ? addr.info.replace(/\n/g, ' ') : '';
+                const favStar = note.isFav ? '★' : '☆';
+                const favClass = note.isFav ? 'visible' : '';
+                const previewText = note.info ? note.info.replace(/\n/g, ' ') : '';
 
                 item.innerHTML = `
                     <div class="fav-icon ${favClass}">${favStar}</div>
                     <div class="item-content">
-                        <div class="address-title">${addr.title}</div>
-                        ${previewText ? `<div class="item-preview">${previewText}</div>` : ''}
+                        <div class="note-title">${note.title}</div>
+                        ${previewText ? `<div class="note-preview">${previewText}</div>` : ''}
                     </div>
                 `;
-                item.onclick = () => openDetail(addr.id);
+                item.onclick = () => openDetail(note.id);
                 listContainer.appendChild(item);
             });
         }
 
         function openDetail(id) {
             currentId = id;
-            const addr = addresses.find(a => a.id === id);
-            if (!addr) return;
+            const note = notes.find(n => n.id === id);
+            if (!note) return;
 
-            document.getElementById('d-title').textContent = addr.title;
-            document.getElementById('d-fav-star').style.display = addr.isFav ? 'block' : 'none';
-            document.getElementById('d-info').textContent = addr.info || "Aucun contenu.";
+            document.getElementById('d-title').textContent = note.title;
+            document.getElementById('d-fav-star').style.display = note.isFav ? 'block' : 'none';
+            document.getElementById('d-info').textContent = note.info || "Aucun contenu.";
 
             const view = document.getElementById('detail-view');
             view.style.display = 'flex';
@@ -589,14 +566,14 @@
 
         function startEditProcess() {
             if (!currentId) return;
-            const addr = addresses.find(a => a.id === currentId);
-            if (!addr) return;
+            const note = notes.find(n => n.id === currentId);
+            if (!note) return;
 
-            document.getElementById('f-id').value = addr.id;
-            document.getElementById('f-title').value = addr.title;
-            document.getElementById('f-cat').value = addr.categoryId;
-            document.getElementById('f-fav').checked = addr.isFav || false;
-            document.getElementById('f-info').value = addr.info || '';
+            document.getElementById('f-id').value = note.id;
+            document.getElementById('f-title').value = note.title;
+            document.getElementById('f-cat').value = note.categoryId;
+            document.getElementById('f-fav').checked = note.isFav || false;
+            document.getElementById('f-info').value = note.info || '';
             
             document.getElementById('form-title-text').textContent = "Modifier";
             const formView = document.getElementById('form-view');
@@ -620,7 +597,7 @@
             formView.classList.add('slide-in');
         }
 
-        function saveAddress() {
+        function saveNote() {
             const idVal = document.getElementById('f-id').value;
             const title = document.getElementById('f-title').value.trim();
             
@@ -635,20 +612,20 @@
 
             if (idVal) {
                 const idNum = parseInt(idVal);
-                const index = addresses.findIndex(a => a.id === idNum);
-                if (index !== -1) addresses[index] = { id: idNum, ...newData };
+                const index = notes.findIndex(n => n.id === idNum);
+                if (index !== -1) notes[index] = { id: idNum, ...newData };
             } else {
-                addresses.push({ id: Date.now(), ...newData });
+                notes.push({ id: Date.now(), ...newData });
             }
 
             saveAll();
             closeView('form-view');
         }
 
-        function deleteCurrentAddress() {
+        function deleteCurrentNote() {
             if (!currentId) return;
             if (confirm("Supprimer cette note ?")) {
-                addresses = addresses.filter(a => a.id !== currentId);
+                notes = notes.filter(n => n.id !== currentId);
                 saveAll();
                 closeView('detail-view');
             }
@@ -728,8 +705,8 @@
             
             if (confirm(`Supprimer la catégorie "${cat.name}" ?\nLes notes associées seront déplacées vers "${DEFAULT_CAT_NAME}".`)) {
                 const defaultCat = categories.find(c => c.name === DEFAULT_CAT_NAME);
-                addresses.forEach(addr => {
-                    if (addr.categoryId === id) addr.categoryId = defaultCat.id;
+                notes.forEach(note => {
+                    if (note.categoryId === id) note.categoryId = defaultCat.id;
                 });
                 categories = categories.filter(c => c.id !== id);
                 saveAll();
@@ -737,9 +714,14 @@
             }
         }
 
-        // --- EXPORT / IMPORT ---
+        // --- EXPORT / IMPORT (Format Pur Notes) ---
         function exportData() {
-            const data = { notes: addresses, categories: categories, version: 3 };
+            const data = { 
+                app: "MesNotes", 
+                version: 1, 
+                notes: notes, 
+                categories: categories 
+            };
             const dataStr = JSON.stringify(data, null, 2);
             const blob = new Blob([dataStr], { type: "application/json" });
             const url = URL.createObjectURL(blob);
@@ -753,7 +735,7 @@
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            alert("Sauvegarde : " + a.download);
+            alert("Sauvegarde effectuée : " + a.download);
         }
 
         function triggerImport() {
@@ -763,36 +745,39 @@
         function importData(input) {
             const file = input.files[0];
             if (!file) return;
+            
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const data = JSON.parse(e.target.result);
-                    // Gestion de la version 3 (Notes) ou rétrocompatibilité
-                    if (data.version === 3 && Array.isArray(data.notes) && Array.isArray(data.categories)) {
-                        addresses = data.notes;
-                        categories = data.categories;
-                    } else if (data.version === 2 && Array.isArray(data.addresses) && Array.isArray(data.categories)) {
-                        // Migration depuis l'ancien format Adresses
-                        addresses = data.addresses;
-                        categories = data.categories;
-                    } else if (Array.isArray(data)) {
-                        addresses = data;
-                        if (!categories.length) categories = [{ id: 1, name: DEFAULT_CAT_NAME }];
-                    } else {
-                        alert("Format invalide.");
-                        return;
-                    }
                     
-                    migrateData();
-                    saveAll();
-                    alert("Restauration réussie !");
-                    closeView('detail-view'); closeView('form-view'); closeView('cat-manager-view');
+                    // Vérification stricte du format "Notes"
+                    if (data.app === "MesNotes" && data.version === 1 && Array.isArray(data.notes) && Array.isArray(data.categories)) {
+                        // On écrase tout proprement
+                        categories = data.categories;
+                        notes = data.notes;
+                        
+                        // Sécurité catégorie par défaut
+                        if (!categories.find(c => c.name === DEFAULT_CAT_NAME)) {
+                            categories.unshift({ id: Date.now(), name: DEFAULT_CAT_NAME });
+                        }
+
+                        saveAll();
+                        alert("Restauration réussie !\n" + categories.length + " catégories et " + notes.length + " notes importées.");
+                        
+                        closeView('detail-view'); 
+                        closeView('form-view'); 
+                        closeView('cat-manager-view');
+                    } else {
+                        alert("Format invalide. Ce fichier ne semble pas provenir de l'application 'Mes Notes' (ou est trop ancien).");
+                    }
                 } catch (err) {
-                    alert("Erreur de lecture.");
+                    console.error(err);
+                    alert("Erreur de lecture du fichier JSON.");
                 }
+                input.value = '';
             };
             reader.readAsText(file);
-            input.value = '';
         }
 
         function closeView(viewId) {
