@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gestion de Notes - Ultime</title>
+    <style>
+        :root {
+            --primary: #007AFF;
+            --danger: #FF3B30;
+            --success: #34C759;
+            --warning: #FF9500;
+            --bg: #F2F2F7;
+            --card-bg: #FFFFFF;
+            --text: #000000;
+            --text-sec: #8E8E93;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            padding: 0;
+            color: var(--text);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Header & Liste --- */
+        #list-view {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            padding: 10px 15px;
+            border-bottom: 1px solid #C6C6C8;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .header-row-1 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        h1 { font-size: 18px; margin: 0; font-weight: 700; display: inline-block; margin-right: 8px; }
+
+        .cat-select {
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: 1px solid #C6C6C8;
+            background-color: #E3E3E8;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            outline: none;
+            max-width: 160px;
+        }
+
+        .cat-manage-btn {
+            font-size: 13px;
+            background: none;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 5px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .backup-btn {
+            font-size: 18px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 8px;
+            padding: 4px;
+        }
+
+        #search-bar {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #C6C6C8;
+            background-color: #E3E3E8;
+            font-size: 15px;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        #address-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+            padding-bottom: 80px;
+        }
+
+        .address-item {
+            background-color: var(--card-bg);
+            padding: 12px 15px;
+            margin-bottom: 6px;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .address-item:active { transform: scale(0.98); background-color: #f0f0f0; }
+        
+        .fav-icon {
+            color: var(--warning);
+            font-size: 18px;
+            flex-shrink: 0;
+            visibility: hidden;
+            width: 20px;
+            text-align: center;
+        }
+        .fav-icon.visible { visibility: visible; }
+
+        .item-content { flex: 1; min-width: 0; }
+        .address-title { font-weight: 600; font-size: 16px; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .item-preview { font-size: 13px; color: var(--text-sec); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            box-shadow: 0 4px 10px rgba(0,122,255,0.4);
+            cursor: pointer;
+            border: none;
+            z-index: 15;
+        }
+
+        /* --- Vues Plein Écran --- */
+        .full-screen-view {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg);
+            z-index: 20;
+            display: none;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .view-header {
+            background-color: var(--card-bg);
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #C6C6C8;
+            position: sticky;
+            top: 0;
+            flex-shrink: 0;
+        }
+
+        .back-btn, .action-header-btn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+        .back-btn { color: var(--primary); }
+        .action-header-btn { color: var(--primary); font-weight: 600; }
+
+        .view-content { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+
+        /* Détail */
+        .detail-header-row { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; flex-shrink: 0; }
+        .detail-title { font-size: 24px; font-weight: 700; margin: 0; }
+        .detail-fav-star { color: var(--warning); font-size: 24px; line-height: 1; }
+        
+        .section-label { font-size: 12px; color: var(--text-sec); text-transform: uppercase; margin-bottom: 5px; margin-top: 15px; font-weight: 700; letter-spacing: 0.5px; flex-shrink: 0; }
+        
+        .detail-box-info {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            font-size: 16px;
+            line-height: 1.6;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            white-space: pre-wrap;
+            width: 100%;
+            box-sizing: border-box;
+            min-height: 200px; 
+            flex-grow: 1; 
+            overflow-y: auto;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .btn-delete-small {
+            background: none;
+            border: none;
+            color: var(--danger);
+            font-size: 14px;
+            text-decoration: underline;
+            cursor: pointer;
+            padding: 20px 0;
+            margin: 0 auto;
+            display: block;
+            opacity: 0.7;
+            flex-shrink: 0;
+        }
+
+        /* Formulaire & Catégories */
+        .form-group { margin-bottom: 15px; }
+        .form-label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-sec); font-size: 13px; text-transform: uppercase; }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            border: 1px solid #C6C6C8;
+            margin-bottom: 15px;
+        }
+        .checkbox-group input { width: 20px; height: 20px; accent-color: var(--warning); }
+        .checkbox-group label { font-size: 16px; font-weight: 500; color: var(--text); margin: 0; cursor: pointer; }
+        
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #C6C6C8;
+            background-color: var(--card-bg);
+            font-size: 16px;
+            font-family: inherit;
+            box-sizing: border-box;
+            color: #000;
+        }
+        .form-textarea { min-height: 300px; resize: vertical; }
+        
+        .btn-save {
+            background-color: var(--primary);
+            color: white;
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+
+        /* Gestion Catégories */
+        .cat-list-item {
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .cat-name { font-weight: 600; font-size: 16px; }
+        .cat-actions button {
+            background: none;
+            border: none;
+            font-size: 14px;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 6px;
+            margin-left: 5px;
+        }
+        .btn-edit-cat { color: var(--primary); background-color: rgba(0,122,255,0.1); }
+        .btn-del-cat { color: var(--danger); background-color: rgba(255,59,48,0.1); }
+        .btn-add-cat {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        #file-input { display: none; }
+        .slide-in { animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <!-- VUE LISTE -->
+    <div id="list-view">
+        <header>
+            <div class="header-row-1">
+                <h1>Notes</h1>
+                <div class="header-controls">
+                    <select id="cat-filter" class="cat-select" onchange="renderList()">
+                        <option value="all">Toutes les cat.</option>
+                    </select>
+                    
+                    <button class="cat-manage-btn" onclick="openCatManager()">Cat.</button>
+                    
+                    <button class="backup-btn" onclick="exportData()" title="Sauvegarder">💾</button>
+                    <button class="backup-btn restore" onclick="triggerImport()" title="Restaurer">📂</button>
+                </div>
+            </div>
+            <input type="text" id="search-bar" placeholder="Rechercher dans titres et textes...">
+        </header>
+        <div id="address-list"></div>
+        <button class="fab" onclick="openForm()">+</button>
+    </div>
+
+    <!-- VUE DÉTAIL -->
+    <div id="detail-view" class="full-screen-view">
+        <div class="view-header">
+            <button class="back-btn" onclick="closeView('detail-view')">← Retour</button>
+            <button class="action-header-btn" onclick="startEditProcess()">Modifier</button>
+        </div>
+        <div class="view-content">
+            <div class="detail-header-row">
+                <div class="detail-title" id="d-title">Titre</div>
+                <div class="detail-fav-star" id="d-fav-star" style="display:none;">★</div>
+            </div>
+            
+            <div class="section-label">Contenu de la note</div>
+            <div class="detail-box-info" id="d-info"></div>
+
+            <button class="btn-delete-small" onclick="deleteCurrentAddress()">Supprimer cette note</button>
+        </div>
+    </div>
+
+    <!-- VUE FORMULAIRE NOTE -->
+    <div id="form-view" class="full-screen-view">
+        <div class="view-header">
+            <button class="back-btn" onclick="closeView('form-view')">Annuler</button>
+            <h2 style="margin:0; font-size:18px;" id="form-title-text">Nouvelle Note</h2>
+            <div style="width:50px;"></div>
+        </div>
+        <div class="view-content">
+            <input type="hidden" id="f-id">
+            
+            <div class="form-group">
+                <label class="form-label">Titre</label>
+                <input type="text" id="f-title" class="form-input" placeholder="Ex: Idée de projet">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Catégorie</label>
+                <select id="f-cat" class="form-select"></select>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="f-fav">
+                <label for="f-fav">Favori ★</label>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Texte libre</label>
+                <textarea id="f-info" class="form-textarea" placeholder="Écrivez votre note ici..."></textarea>
+            </div>
+
+            <button class="btn-save" onclick="saveAddress()">Enregistrer</button>
+        </div>
+    </div>
+
+    <!-- VUE GESTION CATÉGORIES -->
+    <div id="cat-manager-view" class="full-screen-view">
+        <div class="view-header">
+            <button class="back-btn" onclick="closeView('cat-manager-view')">← Retour</button>
+            <h2 style="margin:0; font-size:18px;">Gérer les Catégories</h2>
+            <div style="width:50px;"></div>
+        </div>
+        <div class="view-content">
+            <div id="cat-list-container"></div>
+            <button class="btn-add-cat" onclick="createNewCategory()">+ Créer une catégorie</button>
+        </div>
+    </div>
+
+    <input type="file" id="file-input" accept=".json" onchange="importData(this)">
+
+    <script>
+        let addresses = []; // On garde le nom de variable pour la compatibilité, mais ce sont des notes
+        let categories = [];
+        const DEFAULT_CAT_NAME = "Aucune catégorie";
+        let currentId = null;
+
+        function init() {
+            const storedAddr = localStorage.getItem('myNotes');
+            const storedCat = localStorage.getItem('myNotesCategories');
+
+            if (storedAddr) addresses = JSON.parse(storedAddr);
+            else addresses = [];
+
+            if (storedCat) {
+                categories = JSON.parse(storedCat);
+                if (!categories.find(c => c.name === DEFAULT_CAT_NAME)) {
+                    categories.unshift({ id: Date.now(), name: DEFAULT_CAT_NAME });
+                }
+            } else {
+                categories = [{ id: 1, name: DEFAULT_CAT_NAME }];
+            }
+
+            migrateData();
+            updateCatSelects();
+            
+            const defaultCat = categories.find(c => c.name === DEFAULT_CAT_NAME);
+            if (defaultCat) {
+                document.getElementById('cat-filter').value = defaultCat.id;
+            }
+            
+            renderList();
+        }
+
+        function migrateData() {
+            let changed = false;
+            addresses.forEach(addr => {
+                if (addr.isFav === undefined) { addr.isFav = false; changed = true; }
+                // Nettoyage des anciens champs inutiles pour les notes
+                if (addr.query) { delete addr.query; changed = true; }
+                if (addr.phone1) { delete addr.phone1; changed = true; }
+                if (addr.phone2) { delete addr.phone2; changed = true; }
+                if (addr.email1) { delete addr.email1; changed = true; }
+                if (addr.email2) { delete addr.email2; changed = true; }
+                
+                if (!addr.categoryId) {
+                    const defaultCat = categories.find(c => c.name === DEFAULT_CAT_NAME);
+                    addr.categoryId = defaultCat ? defaultCat.id : categories[0].id;
+                    changed = true;
+                }
+            });
+            if (changed) saveAll();
+        }
+
+        function saveAll() {
+            localStorage.setItem('myNotes', JSON.stringify(addresses));
+            localStorage.setItem('myNotesCategories', JSON.stringify(categories));
+            updateCatSelects();
+            renderList();
+        }
+
+        function updateCatSelects() {
+            const filterSelect = document.getElementById('cat-filter');
+            const formSelect = document.getElementById('f-cat');
+            const currentFilter = filterSelect.value;
+
+            filterSelect.innerHTML = '<option value="all">Toutes les cat.</option>';
+            formSelect.innerHTML = '';
+
+            const sortedCats = [...categories].sort((a, b) => {
+                return a.name.localeCompare(b.name, 'fr', { sensitivity: 'base' });
+            });
+
+            sortedCats.forEach(cat => {
+                const opt1 = document.createElement('option');
+                opt1.value = cat.id;
+                opt1.textContent = cat.name;
+                filterSelect.appendChild(opt1);
+
+                const opt2 = document.createElement('option');
+                opt2.value = cat.id;
+                opt2.textContent = cat.name;
+                formSelect.appendChild(opt2);
+            });
+
+            if (currentFilter && categories.find(c => c.id == currentFilter)) {
+                filterSelect.value = currentFilter;
+            } else {
+                const defaultCat = categories.find(c => c.name === DEFAULT_CAT_NAME);
+                if (defaultCat) filterSelect.value = defaultCat.id;
+            }
+        }
+
+        function renderList() {
+            const listContainer = document.getElementById('address-list');
+            const filterCat = document.getElementById('cat-filter').value;
+            const rawSearchText = document.getElementById('search-bar').value;
+            
+            // Normalisation pour gérer les accents
+            const searchText = rawSearchText.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+
+            listContainer.innerHTML = '';
+            
+            let finalList = [];
+
+            // --- CAS 1 : RECHERCHE ACTIVE ---
+            if (searchText !== "") {
+                // On ignore la catégorie. On cherche dans le TITRE ET le TEXTE.
+                finalList = addresses.filter(addr => {
+                    const titleNorm = (addr.title || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                    const infoNorm = (addr.info || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                    
+                    return titleNorm.includes(searchText) || infoNorm.includes(searchText);
+                });
+
+                finalList.sort((a, b) => a.title.localeCompare(b.title, 'fr', { sensitivity: 'base' }));
+            } 
+            
+            // --- CAS 2 : RECHERCHE VIDE ---
+            else {
+                // 1. TOUS LES FAVORIS (Le filtre catégorie est ignoré pour les favoris)
+                const favorites = addresses.filter(addr => addr.isFav);
+                favorites.sort((a, b) => a.title.localeCompare(b.title, 'fr', { sensitivity: 'base' }));
+
+                // 2. LES AUTRES (Respectent le filtre catégorie)
+                const others = addresses.filter(addr => {
+                    if (addr.isFav) return false; 
+                    if (filterCat === 'all') return true;
+                    return addr.categoryId == filterCat;
+                });
+                others.sort((a, b) => a.title.localeCompare(b.title, 'fr', { sensitivity: 'base' }));
+
+                finalList = [...favorites, ...others];
+            }
+
+            if (finalList.length === 0) {
+                listContainer.innerHTML = '<div style="text-align:center; color:#8E8E93; margin-top:20px; font-size:14px;">Aucune note trouvée</div>';
+                return;
+            }
+
+            finalList.forEach(addr => {
+                const item = document.createElement('div');
+                item.className = 'address-item';
+                
+                const favStar = addr.isFav ? '★' : '☆';
+                const favClass = addr.isFav ? 'visible' : '';
+                
+                // Aperçu du texte dans la liste
+                const previewText = addr.info ? addr.info.replace(/\n/g, ' ') : '';
+
+                item.innerHTML = `
+                    <div class="fav-icon ${favClass}">${favStar}</div>
+                    <div class="item-content">
+                        <div class="address-title">${addr.title}</div>
+                        ${previewText ? `<div class="item-preview">${previewText}</div>` : ''}
+                    </div>
+                `;
+                item.onclick = () => openDetail(addr.id);
+                listContainer.appendChild(item);
+            });
+        }
+
+        function openDetail(id) {
+            currentId = id;
+            const addr = addresses.find(a => a.id === id);
+            if (!addr) return;
+
+            document.getElementById('d-title').textContent = addr.title;
+            document.getElementById('d-fav-star').style.display = addr.isFav ? 'block' : 'none';
+            document.getElementById('d-info').textContent = addr.info || "Aucun contenu.";
+
+            const view = document.getElementById('detail-view');
+            view.style.display = 'flex';
+            view.classList.add('slide-in');
+        }
+
+        function startEditProcess() {
+            if (!currentId) return;
+            const addr = addresses.find(a => a.id === currentId);
+            if (!addr) return;
+
+            document.getElementById('f-id').value = addr.id;
+            document.getElementById('f-title').value = addr.title;
+            document.getElementById('f-cat').value = addr.categoryId;
+            document.getElementById('f-fav').checked = addr.isFav || false;
+            document.getElementById('f-info').value = addr.info || '';
+            
+            document.getElementById('form-title-text').textContent = "Modifier";
+            const formView = document.getElementById('form-view');
+            formView.style.display = 'flex';
+            formView.classList.add('slide-in');
+        }
+
+        function openForm() {
+            currentId = null;
+            const defaultCat = categories.find(c => c.name === DEFAULT_CAT_NAME);
+            
+            document.getElementById('f-id').value = '';
+            document.getElementById('f-title').value = '';
+            document.getElementById('f-cat').value = defaultCat ? defaultCat.id : categories[0].id;
+            document.getElementById('f-fav').checked = false;
+            document.getElementById('f-info').value = '';
+            document.getElementById('form-title-text').textContent = "Nouvelle Note";
+            
+            const formView = document.getElementById('form-view');
+            formView.style.display = 'flex';
+            formView.classList.add('slide-in');
+        }
+
+        function saveAddress() {
+            const idVal = document.getElementById('f-id').value;
+            const title = document.getElementById('f-title').value.trim();
+            
+            if (!title) { alert("Le titre est obligatoire."); return; }
+
+            const newData = {
+                title: title,
+                categoryId: parseInt(document.getElementById('f-cat').value),
+                isFav: document.getElementById('f-fav').checked,
+                info: document.getElementById('f-info').value.trim()
+            };
+
+            if (idVal) {
+                const idNum = parseInt(idVal);
+                const index = addresses.findIndex(a => a.id === idNum);
+                if (index !== -1) addresses[index] = { id: idNum, ...newData };
+            } else {
+                addresses.push({ id: Date.now(), ...newData });
+            }
+
+            saveAll();
+            closeView('form-view');
+        }
+
+        function deleteCurrentAddress() {
+            if (!currentId) return;
+            if (confirm("Supprimer cette note ?")) {
+                addresses = addresses.filter(a => a.id !== currentId);
+                saveAll();
+                closeView('detail-view');
+            }
+        }
+
+        // --- GESTION CATÉGORIES ---
+
+        function openCatManager() {
+            renderCatList();
+            const view = document.getElementById('cat-manager-view');
+            view.style.display = 'flex';
+            view.classList.add('slide-in');
+        }
+
+        function renderCatList() {
+            const container = document.getElementById('cat-list-container');
+            container.innerHTML = '';
+            
+            const sortedCats = [...categories].sort((a, b) => a.name.localeCompare(b.name, 'fr', { sensitivity: 'base' }));
+            
+            sortedCats.forEach(cat => {
+                const isDefault = cat.name === DEFAULT_CAT_NAME;
+                const item = document.createElement('div');
+                item.className = 'cat-list-item';
+                
+                let actionsHtml = '';
+                if (!isDefault) {
+                    actionsHtml = `
+                        <div class="cat-actions">
+                            <button class="btn-edit-cat" onclick="editCategory(${cat.id})">Modifier</button>
+                            <button class="btn-del-cat" onclick="deleteCategory(${cat.id})">Suppr.</button>
+                        </div>
+                    `;
+                } else {
+                    actionsHtml = `<span style="font-size:12px; color:#8E8E93; font-style:italic;">Système</span>`;
+                }
+
+                item.innerHTML = `
+                    <div class="cat-name">${cat.name}</div>
+                    ${actionsHtml}
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function createNewCategory() {
+            const name = prompt("Nom de la nouvelle catégorie :");
+            if (name && name.trim() !== "") {
+                if (categories.find(c => c.name.toLowerCase() === name.trim().toLowerCase())) {
+                    alert("Cette catégorie existe déjà.");
+                    return;
+                }
+                categories.push({ id: Date.now(), name: name.trim() });
+                saveAll();
+                renderCatList();
+            }
+        }
+
+        function editCategory(id) {
+            const cat = categories.find(c => c.id === id);
+            if (!cat) return;
+            const newName = prompt("Nouveau nom :", cat.name);
+            if (newName && newName.trim() !== "") {
+                if (categories.find(c => c.name.toLowerCase() === newName.trim().toLowerCase() && c.id !== id)) {
+                    alert("Cette catégorie existe déjà.");
+                    return;
+                }
+                cat.name = newName.trim();
+                saveAll();
+                renderCatList();
+            }
+        }
+
+        function deleteCategory(id) {
+            const cat = categories.find(c => c.id === id);
+            if (!cat || cat.name === DEFAULT_CAT_NAME) return;
+            
+            if (confirm(`Supprimer la catégorie "${cat.name}" ?\nLes notes associées seront déplacées vers "${DEFAULT_CAT_NAME}".`)) {
+                const defaultCat = categories.find(c => c.name === DEFAULT_CAT_NAME);
+                addresses.forEach(addr => {
+                    if (addr.categoryId === id) addr.categoryId = defaultCat.id;
+                });
+                categories = categories.filter(c => c.id !== id);
+                saveAll();
+                renderCatList();
+            }
+        }
+
+        // --- EXPORT / IMPORT ---
+        function exportData() {
+            const data = { notes: addresses, categories: categories, version: 3 };
+            const dataStr = JSON.stringify(data, null, 2);
+            const blob = new Blob([dataStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            const now = new Date();
+            const dateStr = now.toISOString().slice(0,10);
+            const timeStr = now.toTimeString().slice(0,5).replace(':', '-');
+            a.download = `mes_notes_${dateStr}_${timeStr}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            alert("Sauvegarde : " + a.download);
+        }
+
+        function triggerImport() {
+            document.getElementById('file-input').click();
+        }
+
+        function importData(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    // Gestion de la version 3 (Notes) ou rétrocompatibilité
+                    if (data.version === 3 && Array.isArray(data.notes) && Array.isArray(data.categories)) {
+                        addresses = data.notes;
+                        categories = data.categories;
+                    } else if (data.version === 2 && Array.isArray(data.addresses) && Array.isArray(data.categories)) {
+                        // Migration depuis l'ancien format Adresses
+                        addresses = data.addresses;
+                        categories = data.categories;
+                    } else if (Array.isArray(data)) {
+                        addresses = data;
+                        if (!categories.length) categories = [{ id: 1, name: DEFAULT_CAT_NAME }];
+                    } else {
+                        alert("Format invalide.");
+                        return;
+                    }
+                    
+                    migrateData();
+                    saveAll();
+                    alert("Restauration réussie !");
+                    closeView('detail-view'); closeView('form-view'); closeView('cat-manager-view');
+                } catch (err) {
+                    alert("Erreur de lecture.");
+                }
+            };
+            reader.readAsText(file);
+            input.value = '';
+        }
+
+        function closeView(viewId) {
+            const view = document.getElementById(viewId);
+            view.style.display = 'none';
+            view.classList.remove('slide-in');
+            if (viewId === 'detail-view') currentId = null;
+        }
+
+        document.getElementById('search-bar').addEventListener('input', () => renderList());
+        init();
+    </script>
+</body>
+</html>
