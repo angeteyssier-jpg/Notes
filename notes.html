@@ -30,41 +30,53 @@
         /* --- Header & Liste --- */
         #list-view { display: flex; flex-direction: column; height: 100%; position: relative; }
         header {
-            background-color: var(--card-bg); padding: 10px 15px; border-bottom: 1px solid #C6C6C8;
+            background-color: var(--card-bg); padding: 8px 12px; border-bottom: 1px solid #C6C6C8;
             position: sticky; top: 0; z-index: 10;
         }
-        .header-row-1 { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .header-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-        h1 { font-size: 18px; margin: 0; font-weight: 700; display: inline-block; margin-right: 8px; }
+        .header-row-1 { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .header-controls { display: flex; align-items: center; gap: 6px; flex-wrap: nowrap; }
+        
+        h1 { font-size: 17px; margin: 0; font-weight: 700; display: inline-block; margin-right: 6px; white-space: nowrap; }
+        
         .cat-select {
-            padding: 6px 10px; border-radius: 8px; border: 1px solid #C6C6C8;
-            background-color: #E3E3E8; font-size: 14px; font-weight: 600; color: var(--text); outline: none; max-width: 160px;
+            padding: 5px 8px; border-radius: 6px; border: 1px solid #C6C6C8;
+            background-color: #E3E3E8; font-size: 13px; font-weight: 600; color: var(--text); outline: none; 
+            max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
+        
         .cat-manage-btn {
-            font-size: 13px; background: none; border: 1px solid var(--primary); color: var(--primary);
-            padding: 5px 10px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: 600; white-space: nowrap;
+            font-size: 12px; background: none; border: 1px solid var(--primary); color: var(--primary);
+            padding: 4px 8px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 4px; 
+            font-weight: 600; white-space: nowrap;
         }
-        .backup-btn { font-size: 18px; background: none; border: none; cursor: pointer; margin-left: 8px; padding: 4px; }
+        
+        .backup-btn { 
+            font-size: 16px; background: none; border: none; cursor: pointer; padding: 2px; 
+            display: flex; align-items: center; justify-content: center;
+        }
+        
         #search-bar {
-            width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid #C6C6C8;
-            background-color: #E3E3E8; font-size: 15px; box-sizing: border-box; outline: none;
+            width: 100%; padding: 6px 10px; border-radius: 6px; border: 1px solid #C6C6C8;
+            background-color: #E3E3E8; font-size: 14px; box-sizing: border-box; outline: none;
         }
+
         #notes-list { flex: 1; overflow-y: auto; padding: 8px; padding-bottom: 80px; }
         .note-item {
-            background-color: var(--card-bg); padding: 12px 15px; margin-bottom: 6px; border-radius: 10px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05); cursor: pointer; display: flex; align-items: center; gap: 12px;
+            background-color: var(--card-bg); padding: 10px 12px; margin-bottom: 6px; border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05); cursor: pointer; display: flex; align-items: center; gap: 10px;
         }
         .note-item:active { transform: scale(0.98); background-color: #f0f0f0; }
-        .fav-icon { color: var(--warning); font-size: 18px; flex-shrink: 0; visibility: hidden; width: 20px; text-align: center; }
+        .fav-icon { color: var(--warning); font-size: 16px; flex-shrink: 0; visibility: hidden; width: 18px; text-align: center; }
         .fav-icon.visible { visibility: visible; }
-        .lock-icon { color: var(--text-sec); font-size: 16px; flex-shrink: 0; width: 20px; text-align: center; }
+        .lock-icon { color: var(--text-sec); font-size: 14px; flex-shrink: 0; width: 18px; text-align: center; }
         .item-content { flex: 1; min-width: 0; }
-        .note-title { font-weight: 600; font-size: 16px; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .note-preview { font-size: 13px; color: var(--text-sec); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .note-title { font-weight: 600; font-size: 15px; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .note-preview { font-size: 12px; color: var(--text-sec); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
         .fab {
-            position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; background-color: var(--primary);
+            position: fixed; bottom: 20px; right: 20px; width: 48px; height: 48px; background-color: var(--primary);
             color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center;
-            font-size: 28px; box-shadow: 0 4px 10px rgba(0,122,255,0.4); cursor: pointer; border: none; z-index: 15;
+            font-size: 24px; box-shadow: 0 4px 10px rgba(0,122,255,0.4); cursor: pointer; border: none; z-index: 15;
         }
 
         /* --- Vues Plein Écran --- */
@@ -73,76 +85,86 @@
             z-index: 20; display: none; flex-direction: column; overflow-y: auto;
         }
         .view-header {
-            background-color: var(--card-bg); padding: 15px; display: flex; align-items: center;
+            background-color: var(--card-bg); padding: 12px 15px; display: flex; align-items: center;
             justify-content: space-between; border-bottom: 1px solid #C6C6C8; position: sticky; top: 0; flex-shrink: 0;
         }
-        .back-btn, .action-header-btn { background: none; border: none; font-size: 16px; cursor: pointer; padding: 5px 10px; }
+        .back-btn, .action-header-btn { background: none; border: none; font-size: 15px; cursor: pointer; padding: 5px 8px; }
         .back-btn { color: var(--primary); }
         .action-header-btn { color: var(--primary); font-weight: 600; }
-        .view-content { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+        .view-content { padding: 15px; flex: 1; display: flex; flex-direction: column; }
 
         /* Détail */
-        .detail-header-row { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; flex-shrink: 0; flex-wrap: wrap; }
-        .detail-title { font-size: 24px; font-weight: 700; margin: 0; }
-        .detail-fav-star { color: var(--warning); font-size: 24px; line-height: 1; }
+        .detail-header-row { display: flex; align-items: center; gap: 8px; margin-bottom: 15px; flex-shrink: 0; flex-wrap: wrap; }
+        .detail-title { font-size: 22px; font-weight: 700; margin: 0; }
+        .detail-fav-star { color: var(--warning); font-size: 20px; line-height: 1; }
         .secure-badge {
-            background-color: var(--text-sec); color: white; font-size: 11px; padding: 2px 6px;
-            border-radius: 4px; text-transform: uppercase; font-weight: 700; margin-left: 10px; display: none;
+            background-color: var(--text-sec); color: white; font-size: 10px; padding: 2px 5px;
+            border-radius: 4px; text-transform: uppercase; font-weight: 700; display: none;
         }
         .secure-badge.visible { display: inline-block; }
-        .section-label { font-size: 12px; color: var(--text-sec); text-transform: uppercase; margin-bottom: 5px; margin-top: 15px; font-weight: 700; letter-spacing: 0.5px; flex-shrink: 0; }
+        .section-label { font-size: 11px; color: var(--text-sec); text-transform: uppercase; margin-bottom: 5px; margin-top: 10px; font-weight: 700; letter-spacing: 0.5px; flex-shrink: 0; }
         .detail-box-info {
-            background-color: var(--card-bg); padding: 20px; border-radius: 12px; font-size: 16px; line-height: 1.6;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08); white-space: pre-wrap; width: 100%; box-sizing: border-box;
-            min-height: 200px; flex-grow: 1; overflow-y: auto; border: 1px solid rgba(0,0,0,0.05);
+            background-color: var(--card-bg); padding: 15px; border-radius: 10px; font-size: 15px; line-height: 1.5;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); white-space: pre-wrap; width: 100%; box-sizing: border-box;
+            min-height: 150px; flex-grow: 1; overflow-y: auto; border: 1px solid rgba(0,0,0,0.05);
         }
         .btn-delete-small {
-            background: none; border: none; color: var(--danger); font-size: 14px; text-decoration: underline;
-            cursor: pointer; padding: 20px 0; margin: 0 auto; display: block; opacity: 0.7; flex-shrink: 0;
+            background: none; border: none; color: var(--danger); font-size: 13px; text-decoration: underline;
+            cursor: pointer; padding: 15px 0; margin: 0 auto; display: block; opacity: 0.7; flex-shrink: 0;
         }
         .btn-change-pass {
-            background: none; border: 1px solid var(--primary); color: var(--primary); font-size: 14px;
-            padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 15px;
+            background: none; border: 1px solid var(--primary); color: var(--primary); font-size: 13px;
+            padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 10px;
             display: none; width: 100%;
         }
         .btn-change-pass.visible { display: block; }
 
         /* Formulaire & Catégories */
-        .form-group { margin-bottom: 15px; }
-        .form-label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-sec); font-size: 13px; text-transform: uppercase; }
+        .form-group { margin-bottom: 12px; }
+        .form-label { display: block; font-weight: 600; margin-bottom: 6px; color: var(--text-sec); font-size: 12px; text-transform: uppercase; }
+        
+        .input-wrapper { position: relative; display: flex; align-items: center; }
+        .toggle-pass-btn {
+            position: absolute; right: 10px; background: none; border: none; cursor: pointer;
+            color: var(--text-sec); font-size: 18px; padding: 0; display: flex; align-items: center;
+        }
+        
         .checkbox-group {
-            display: flex; align-items: center; gap: 10px; padding: 15px; background-color: var(--card-bg);
-            border-radius: 10px; border: 1px solid #C6C6C8; margin-bottom: 15px;
+            display: flex; align-items: center; gap: 10px; padding: 12px; background-color: var(--card-bg);
+            border-radius: 8px; border: 1px solid #C6C6C8; margin-bottom: 12px;
         }
-        .checkbox-group input { width: 20px; height: 20px; accent-color: var(--warning); }
-        .checkbox-group label { font-size: 16px; font-weight: 500; color: var(--text); margin: 0; cursor: pointer; }
-        .secure-input-group { display: none; margin-top: 10px; padding: 15px; background-color: #FFF3CD; border: 1px solid #FFEEBA; border-radius: 10px; }
+        .checkbox-group input { width: 18px; height: 18px; accent-color: var(--warning); }
+        .checkbox-group label { font-size: 15px; font-weight: 500; color: var(--text); margin: 0; cursor: pointer; }
+        
+        .secure-input-group { display: none; margin-top: 8px; padding: 12px; background-color: #FFF3CD; border: 1px solid #FFEEBA; border-radius: 8px; }
         .secure-input-group.visible { display: block; }
+        
         .form-input, .form-textarea, .form-select {
-            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #C6C6C8;
-            background-color: var(--card-bg); font-size: 16px; font-family: inherit; box-sizing: border-box; color: #000;
+            width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #C6C6C8;
+            background-color: var(--card-bg); font-size: 15px; font-family: inherit; box-sizing: border-box; color: #000;
         }
-        .form-textarea { min-height: 300px; resize: vertical; }
+        .form-textarea { min-height: 250px; resize: vertical; }
+        
         .btn-save {
-            background-color: var(--primary); color: white; width: 100%; padding: 16px; border: none;
-            border-radius: 12px; font-size: 17px; font-weight: 700; cursor: pointer; margin-top: 20px; margin-bottom: 40px;
+            background-color: var(--primary); color: white; width: 100%; padding: 14px; border: none;
+            border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 15px; margin-bottom: 30px;
         }
 
         /* Gestion Catégories */
         .cat-list-item {
-            background: var(--card-bg); padding: 15px; border-radius: 10px; margin-bottom: 10px;
-            display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            background: var(--card-bg); padding: 12px; border-radius: 8px; margin-bottom: 8px;
+            display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
-        .cat-name { font-weight: 600; font-size: 16px; }
+        .cat-name { font-weight: 600; font-size: 15px; }
         .cat-actions button {
-            background: none; border: none; font-size: 14px; padding: 5px 10px; cursor: pointer;
-            border-radius: 6px; margin-left: 5px;
+            background: none; border: none; font-size: 13px; padding: 4px 8px; cursor: pointer;
+            border-radius: 5px; margin-left: 4px;
         }
         .btn-edit-cat { color: var(--primary); background-color: rgba(0,122,255,0.1); }
         .btn-del-cat { color: var(--danger); background-color: rgba(255,59,48,0.1); }
         .btn-add-cat {
-            width: 100%; padding: 15px; background-color: var(--primary); color: white; border: none;
-            border-radius: 10px; font-size: 16px; font-weight: 600; margin-top: 20px; cursor: pointer;
+            width: 100%; padding: 12px; background-color: var(--primary); color: white; border: none;
+            border-radius: 8px; font-size: 15px; font-weight: 600; margin-top: 15px; cursor: pointer;
         }
 
         #file-input { display: none; }
@@ -155,19 +177,24 @@
             z-index: 100; display: none; justify-content: center; align-items: center;
         }
         .modal-box {
-            background: var(--card-bg); padding: 25px; border-radius: 15px; width: 90%; max-width: 350px;
+            background: var(--card-bg); padding: 20px; border-radius: 12px; width: 90%; max-width: 320px;
             text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
-        .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 15px; }
+        .modal-title { font-size: 17px; font-weight: 700; margin-bottom: 12px; }
+        .modal-input-wrapper { position: relative; margin-bottom: 12px; text-align: left; }
         .modal-input {
-            width: 100%; padding: 12px; border: 1px solid #C6C6C8; border-radius: 8px;
-            font-size: 16px; margin-bottom: 15px; box-sizing: border-box;
+            width: 100%; padding: 10px 35px 10px 10px; border: 1px solid #C6C6C8; border-radius: 6px;
+            font-size: 15px; box-sizing: border-box;
         }
-        .modal-btns { display: flex; gap: 10px; justify-content: center; }
-        .modal-btn { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        .modal-toggle-btn {
+            position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+            background: none; border: none; cursor: pointer; color: var(--text-sec); font-size: 18px;
+        }
+        .modal-btns { display: flex; gap: 8px; justify-content: center; margin-top: 15px; }
+        .modal-btn { flex: 1; padding: 10px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 14px; }
         .modal-cancel { background: #E5E5EA; color: #000; }
         .modal-confirm { background: var(--primary); color: white; }
-        .modal-error { color: var(--danger); font-size: 13px; margin-top: 10px; display: none; }
+        .modal-error { color: var(--danger); font-size: 12px; margin-top: 8px; display: none; }
     </style>
 </head>
 <body>
@@ -179,14 +206,14 @@
                 <h1>Notes</h1>
                 <div class="header-controls">
                     <select id="cat-filter" class="cat-select" onchange="renderList()">
-                        <option value="all">Toutes les cat.</option>
+                        <option value="all">Toutes</option>
                     </select>
                     <button class="cat-manage-btn" onclick="openCatManager()">Cat.</button>
                     <button class="backup-btn" onclick="exportData()" title="Sauvegarder">💾</button>
                     <button class="backup-btn restore" onclick="triggerImport()" title="Restaurer">📂</button>
                 </div>
             </div>
-            <input type="text" id="search-bar" placeholder="Rechercher dans titres et textes...">
+            <input type="text" id="search-bar" placeholder="Rechercher...">
         </header>
         <div id="notes-list"></div>
         <button class="fab" onclick="openForm()">+</button>
@@ -202,13 +229,12 @@
             <div class="detail-header-row">
                 <div class="detail-title" id="d-title">Titre</div>
                 <div class="detail-fav-star" id="d-fav-star" style="display:none;">★</div>
-                <div class="secure-badge" id="d-secure-badge">🔒 Sécurisée</div>
+                <div class="secure-badge" id="d-secure-badge">🔒</div>
             </div>
             
-            <div class="section-label">Contenu de la note</div>
+            <div class="section-label">Contenu</div>
             <div class="detail-box-info" id="d-info"></div>
 
-            <!-- Bouton changer mot de passe (visible seulement si note sécurisée ouverte) -->
             <button id="btn-change-pass" class="btn-change-pass" onclick="openChangePassModal()">
                 🔑 Changer le mot de passe
             </button>
@@ -221,7 +247,7 @@
     <div id="form-view" class="full-screen-view">
         <div class="view-header">
             <button class="back-btn" onclick="closeView('form-view')">Annuler</button>
-            <h2 style="margin:0; font-size:18px;" id="form-title-text">Nouvelle Note</h2>
+            <h2 style="margin:0; font-size:17px;" id="form-title-text">Nouvelle Note</h2>
             <div style="width:50px;"></div>
         </div>
         <div class="view-content">
@@ -243,10 +269,13 @@
                 <label for="f-secure">Note Sécurisée 🔒</label>
             </div>
             <div id="secure-password-container" class="secure-input-group">
-                <label class="form-label" style="color: #856404;">Mot de passe pour cette note</label>
-                <input type="password" id="f-secure-pass" class="form-input" placeholder="Entrez un mot de passe fort">
-                <div style="font-size: 12px; color: #856404; margin-top: 5px;">
-                    ⚠️ Si vous oubliez ce mot de passe, le contenu sera perdu à jamais.
+                <label class="form-label" style="color: #856404;">Mot de passe</label>
+                <div class="input-wrapper">
+                    <input type="password" id="f-secure-pass" class="form-input" placeholder="Entrez un mot de passe fort">
+                    <button type="button" class="toggle-pass-btn" onclick="toggleVisibility('f-secure-pass')">👁️</button>
+                </div>
+                <div style="font-size: 11px; color: #856404; margin-top: 4px;">
+                    ⚠️ Perte = Données perdues à jamais.
                 </div>
             </div>
             <div class="form-group">
@@ -261,7 +290,7 @@
     <div id="cat-manager-view" class="full-screen-view">
         <div class="view-header">
             <button class="back-btn" onclick="closeView('cat-manager-view')">← Retour</button>
-            <h2 style="margin:0; font-size:18px;">Gérer les Catégories</h2>
+            <h2 style="margin:0; font-size:17px;">Catégories</h2>
             <div style="width:50px;"></div>
         </div>
         <div class="view-content">
@@ -270,29 +299,41 @@
         </div>
     </div>
 
-    <!-- MODAL OUVERTURE (Mot de passe) -->
+    <!-- MODAL OUVERTURE -->
     <div id="password-modal" class="modal-overlay">
         <div class="modal-box">
             <div class="modal-title">🔒 Note Sécurisée</div>
-            <p style="font-size: 14px; color: #666; margin-bottom: 15px;">Entrez le mot de passe pour déchiffrer.</p>
-            <input type="password" id="modal-pass-input" class="modal-input" placeholder="Mot de passe">
+            <p style="font-size: 13px; color: #666; margin-bottom: 12px;">Entrez le mot de passe pour déchiffrer.</p>
+            <div class="modal-input-wrapper">
+                <input type="password" id="modal-pass-input" class="modal-input" placeholder="Mot de passe">
+                <button type="button" class="modal-toggle-btn" onclick="toggleModalVisibility('modal-pass-input')">👁️</button>
+            </div>
             <div class="modal-btns">
                 <button class="modal-btn modal-cancel" onclick="closeModal('password-modal')">Annuler</button>
                 <button class="modal-btn modal-confirm" onclick="submitPassword()">Ouvrir</button>
             </div>
-            <div id="modal-error" class="modal-error">Mot de passe incorrect !</div>
+            <div id="modal-error" class="modal-error">Incorrect !</div>
         </div>
     </div>
 
-    <!-- MODAL CHANGEMENT MOT DE PASSE -->
+    <!-- MODAL CHANGEMENT MDP -->
     <div id="change-pass-modal" class="modal-overlay">
         <div class="modal-box">
             <div class="modal-title">🔑 Changer le mot de passe</div>
-            <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Note: <span id="cp-note-title" style="font-weight:bold;"></span></p>
+            <p style="font-size: 12px; color: #666; margin-bottom: 12px;">Note: <span id="cp-note-title" style="font-weight:bold;"></span></p>
             
-            <input type="password" id="cp-old-pass" class="modal-input" placeholder="Ancien mot de passe">
-            <input type="password" id="cp-new-pass" class="modal-input" placeholder="Nouveau mot de passe">
-            <input type="password" id="cp-confirm-pass" class="modal-input" placeholder="Confirmer nouveau mot de passe">
+            <div class="modal-input-wrapper">
+                <input type="password" id="cp-old-pass" class="modal-input" placeholder="Ancien mot de passe">
+                <button type="button" class="modal-toggle-btn" onclick="toggleModalVisibility('cp-old-pass')">👁️</button>
+            </div>
+            <div class="modal-input-wrapper">
+                <input type="password" id="cp-new-pass" class="modal-input" placeholder="Nouveau mot de passe">
+                <button type="button" class="modal-toggle-btn" onclick="toggleModalVisibility('cp-new-pass')">👁️</button>
+            </div>
+            <div class="modal-input-wrapper">
+                <input type="password" id="cp-confirm-pass" class="modal-input" placeholder="Confirmer nouveau">
+                <button type="button" class="modal-toggle-btn" onclick="toggleModalVisibility('cp-confirm-pass')">👁️</button>
+            </div>
             
             <div class="modal-btns">
                 <button class="modal-btn modal-cancel" onclick="closeModal('change-pass-modal')">Annuler</button>
@@ -311,7 +352,7 @@
         const DEFAULT_CAT_NAME = "Aucune catégorie";
         let currentId = null;
         let pendingNoteId = null; 
-        let decryptedContentCache = null; // Stocke temporairement le contenu déchiffré
+        let decryptedContentCache = null;
 
         const STORAGE_NOTES = 'myNotesData_v2';
         const STORAGE_CATS = 'myNotesCats_v1';
@@ -364,6 +405,20 @@
             }
         }
 
+        // --- UTILS ---
+        function toggleVisibility(inputId) {
+            const input = document.getElementById(inputId);
+            if (input.type === "password") {
+                input.type = "text";
+            } else {
+                input.type = "password";
+            }
+        }
+
+        function toggleModalVisibility(inputId) {
+            toggleVisibility(inputId);
+        }
+
         // --- INIT & STORAGE ---
         function init() {
             const storedNotes = localStorage.getItem(STORAGE_NOTES);
@@ -392,7 +447,7 @@
             const filterSelect = document.getElementById('cat-filter');
             const formSelect = document.getElementById('f-cat');
             const currentFilter = filterSelect.value;
-            filterSelect.innerHTML = '<option value="all">Toutes les cat.</option>';
+            filterSelect.innerHTML = '<option value="all">Toutes</option>';
             formSelect.innerHTML = '';
             const sortedCats = [...categories].sort((a, b) => a.name.localeCompare(b.name, 'fr', { sensitivity: 'base' }));
             sortedCats.forEach(cat => {
@@ -411,6 +466,7 @@
             const filterCat = document.getElementById('cat-filter').value;
             const rawSearchText = document.getElementById('search-bar').value;
             const searchText = rawSearchText.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+            
             listContainer.innerHTML = '';
             let finalList = [];
 
@@ -438,28 +494,50 @@
             }
 
             if (finalList.length === 0) {
-                listContainer.innerHTML = '<div style="text-align:center; color:#8E8E93; margin-top:20px; font-size:14px;">Aucune note trouvée</div>';
+                listContainer.innerHTML = '<div style="text-align:center; color:#8E8E93; margin-top:20px; font-size:13px;">Aucune note</div>';
                 return;
             }
 
             finalList.forEach(note => {
                 const item = document.createElement('div');
                 item.className = 'note-item';
-                const favStar = note.isFav ? '★' : '☆';
-                const favClass = note.isFav ? 'visible' : '';
-                const lockIcon = note.isSecure ? '🔒' : '';
+                
+                const favDiv = document.createElement('div');
+                favDiv.className = 'fav-icon' + (note.isFav ? ' visible' : '');
+                favDiv.textContent = note.isFav ? '★' : '☆';
+                
+                const lockDiv = document.createElement('div');
+                lockDiv.className = 'lock-icon';
+                lockDiv.textContent = note.isSecure ? '🔒' : '';
+                
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'item-content';
+                
+                const titleDiv = document.createElement('div');
+                titleDiv.className = 'note-title';
+                titleDiv.textContent = note.title || "";
+                
+                contentDiv.appendChild(titleDiv);
+                
                 let previewText = '';
-                if (!note.isSecure && note.info) previewText = note.info.replace(/\n/g, ' ');
-                else if (note.isSecure) previewText = "Contenu protégé";
-
-                item.innerHTML = `
-                    <div class="fav-icon $${favClass}">$${favStar}</div>
-                    <div class="lock-icon">${lockIcon}</div>
-                    <div class="item-content">
-                        <div class="note-title">${note.title}</div>
-                        $${previewText ? `<div class="note-preview">$${previewText}</div>` : ''}
-                    </div>
-                `;
+                if (!note.isSecure && note.info) {
+                    // Affichage brut : on affiche exactement ce qu'il y a dans la base (y compris les $ si l'utilisateur les a tapés)
+                    previewText = note.info.replace(/\n/g, ' ');
+                } else if (note.isSecure) {
+                    previewText = "Contenu protégé";
+                }
+                
+                if (previewText) {
+                    const previewDiv = document.createElement('div');
+                    previewDiv.className = 'note-preview';
+                    previewDiv.textContent = previewText;
+                    contentDiv.appendChild(previewDiv);
+                }
+                
+                item.appendChild(favDiv);
+                item.appendChild(lockDiv);
+                item.appendChild(contentDiv);
+                
                 item.onclick = () => handleNoteClick(note);
                 listContainer.appendChild(item);
             });
@@ -496,7 +574,6 @@
             }
         }
 
-        // --- DETAIL VIEW ---
         function openDetail(id) {
             currentId = id;
             const note = notes.find(n => n.id === id);
@@ -510,12 +587,10 @@
             
             if (note.isSecure) {
                 if (decryptedContentCache !== null) {
-                    // Ouverte avec succès
                     document.getElementById('d-info').textContent = decryptedContentCache;
                     btnChange.classList.add('visible');
                 } else {
-                    // Ouverte en mode "édit" ou autre sans déchiffrement préalable (cas rare)
-                    document.getElementById('d-info').textContent = "Contenu chiffré. Veuillez ouvrir via la liste.";
+                    document.getElementById('d-info').textContent = "Contenu chiffré.";
                     btnChange.classList.remove('visible');
                 }
             } else {
@@ -528,7 +603,6 @@
             view.classList.add('slide-in');
         }
 
-        // --- CHANGE PASSWORD LOGIC ---
         function openChangePassModal() {
             const note = notes.find(n => n.id === currentId);
             if (!note) return;
@@ -549,17 +623,17 @@
             const errorDiv = document.getElementById('cp-error');
 
             if (!oldPass || !newPass || !confirmPass) {
-                errorDiv.textContent = "Tous les champs sont obligatoires.";
+                errorDiv.textContent = "Champs obligatoires.";
                 errorDiv.style.display = 'block';
                 return;
             }
             if (newPass !== confirmPass) {
-                errorDiv.textContent = "Les nouveaux mots de passe ne correspondent pas.";
+                errorDiv.textContent = "Les mots de passe ne correspondent pas.";
                 errorDiv.style.display = 'block';
                 return;
             }
             if (newPass.length < 4) {
-                errorDiv.textContent = "Le nouveau mot de passe est trop court.";
+                errorDiv.textContent = "Trop court.";
                 errorDiv.style.display = 'block';
                 return;
             }
@@ -568,30 +642,20 @@
             if (!note) return;
 
             try {
-                // 1. Vérifier l'ancien mot de passe en déchiffrant
                 const currentContent = await decryptContent(note.info, oldPass);
-                
-                // 2. Rechiffrer avec le nouveau
                 const newEncryptedContent = await encryptContent(currentContent, newPass);
-                
-                // 3. Sauvegarder
                 note.info = newEncryptedContent;
                 saveAll();
-                
-                // 4. Mettre à jour le cache et fermer
                 decryptedContentCache = currentContent;
                 closeModal('change-pass-modal');
-                alert("Mot de passe changé avec succès !");
-                // Rafraîchir la vue détail (optionnel, car le contenu est déjà là)
+                alert("Mot de passe changé !");
                 openDetail(currentId); 
-                
             } catch (e) {
                 errorDiv.textContent = "Ancien mot de passe incorrect.";
                 errorDiv.style.display = 'block';
             }
         }
 
-        // --- FORMULAIRE ---
         function startEditProcess() {
             if (!currentId) return;
             const note = notes.find(n => n.id === currentId);
@@ -606,14 +670,12 @@
             if (note.isSecure) {
                 document.getElementById('f-info').value = ""; 
                 document.getElementById('f-secure-pass').value = "";
-                // Optionnel : Pré-remplir avec le contenu déchiffré si on vient de l'ouvrir ?
-                // Pour sécurité maximale, on laisse vide, mais on pourrait faire :
                 if (decryptedContentCache !== null) {
-                     if(confirm("Voulez-vous pré-remplir le texte avec le contenu déchiffré pour le modifier ?")) {
+                     if(confirm("Pré-remplir avec le contenu déchiffré ?")) {
                          document.getElementById('f-info').value = decryptedContentCache;
                      }
                 } else {
-                    alert("Cette note est sécurisée. Le contenu n'est pas chargé. Vous devez réécrire le texte ou le copier depuis la vue détail.");
+                    alert("Note sécurisée. Contenu non chargé.");
                 }
             } else {
                 document.getElementById('f-info').value = note.info || '';
@@ -655,15 +717,15 @@
         async function saveNote() {
             const idVal = document.getElementById('f-id').value;
             const title = document.getElementById('f-title').value.trim();
-            if (!title) { alert("Le titre est obligatoire."); return; }
+            if (!title) { alert("Titre obligatoire."); return; }
 
             const isSecure = document.getElementById('f-secure').checked;
             const securePass = document.getElementById('f-secure-pass').value;
             let finalContent = document.getElementById('f-info').value.trim();
 
             if (isSecure) {
-                if (!securePass) { alert("Un mot de passe est requis pour une note sécurisée."); return; }
-                if (!finalContent) { alert("Le contenu ne peut pas être vide."); return; }
+                if (!securePass) { alert("Mot de passe requis."); return; }
+                if (!finalContent) { alert("Contenu vide."); return; }
                 try { finalContent = await encryptContent(finalContent, securePass); } 
                 catch (e) { alert("Erreur chiffrement."); return; }
             }
@@ -683,14 +745,14 @@
             } else {
                 notes.push({ id: Date.now(), ...newData });
             }
-            decryptedContentCache = null; // Reset cache on save
+            decryptedContentCache = null;
             saveAll();
             closeView('form-view');
         }
 
         function deleteCurrentNote() {
             if (!currentId) return;
-            if (confirm("Supprimer cette note ?")) {
+            if (confirm("Supprimer ?")) {
                 notes = notes.filter(n => n.id !== currentId);
                 decryptedContentCache = null;
                 saveAll();
@@ -698,7 +760,6 @@
             }
         }
 
-        // --- CATEGORIES ---
         function openCatManager() {
             renderCatList();
             const view = document.getElementById('cat-manager-view');
@@ -715,9 +776,9 @@
                 item.className = 'cat-list-item';
                 let actionsHtml = '';
                 if (!isDefault) {
-                    actionsHtml = `<div class="cat-actions"><button class="btn-edit-cat" onclick="editCategory($${cat.id})">Modifier</button><button class="btn-del-cat" onclick="deleteCategory($${cat.id})">Suppr.</button></div>`;
+                    actionsHtml = `<div class="cat-actions"><button class="btn-edit-cat" onclick="editCategory($${cat.id})">Modif.</button><button class="btn-del-cat" onclick="deleteCategory($${cat.id})">Suppr.</button></div>`;
                 } else {
-                    actionsHtml = `<span style="font-size:12px; color:#8E8E93; font-style:italic;">Système</span>`;
+                    actionsHtml = `<span style="font-size:11px; color:#8E8E93; font-style:italic;">Système</span>`;
                 }
                 item.innerHTML = `<div class="cat-name">$${cat.name}</div>$${actionsHtml}`;
                 container.appendChild(item);
@@ -746,7 +807,7 @@
         function deleteCategory(id) {
             const cat = categories.find(c => c.id === id);
             if (!cat || cat.name === DEFAULT_CAT_NAME) return;
-            if (confirm(`Supprimer "$${cat.name}" ? Les notes iront dans "$${DEFAULT_CAT_NAME}".`)) {
+            if (confirm(`Supprimer "${cat.name}" ? Les notes iront dans "${DEFAULT_CAT_NAME}".`)) {
                 const defaultCat = categories.find(c => c.name === DEFAULT_CAT_NAME);
                 notes.forEach(note => { if (note.categoryId === id) note.categoryId = defaultCat.id; });
                 categories = categories.filter(c => c.id !== id);
@@ -756,7 +817,8 @@
         }
 
         // --- EXPORT / IMPORT ---
-        function exportData() {const data = { app: "MesNotesSecure", version: 2, notes: notes, categories: categories };
+        function exportData() {
+            const data = { app: "MesNotesSecure", version: 2, notes: notes, categories: categories };
             const dataStr = JSON.stringify(data, null, 2);
             const blob = new Blob([dataStr], { type: "application/json" });
             const url = URL.createObjectURL(blob);
@@ -802,7 +864,7 @@
             view.classList.remove('slide-in');
             if (viewId === 'detail-view') {
                 currentId = null;
-                decryptedContentCache = null; // Sécurité : on vide le cache quand on ferme la vue
+                decryptedContentCache = null;
             }
         }
 
