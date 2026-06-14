@@ -28,368 +28,146 @@
         }
 
         /* --- Header & Liste --- */
-        #list-view {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            position: relative;
-        }
-
+        #list-view { display: flex; flex-direction: column; height: 100%; position: relative; }
         header {
-            background-color: var(--card-bg);
-            padding: 10px 15px;
-            border-bottom: 1px solid #C6C6C8;
-            position: sticky;
-            top: 0;
-            z-index: 10;
+            background-color: var(--card-bg); padding: 10px 15px; border-bottom: 1px solid #C6C6C8;
+            position: sticky; top: 0; z-index: 10;
         }
-
-        .header-row-1 {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .header-controls {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
+        .header-row-1 { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .header-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
         h1 { font-size: 18px; margin: 0; font-weight: 700; display: inline-block; margin-right: 8px; }
-
         .cat-select {
-            padding: 6px 10px;
-            border-radius: 8px;
-            border: 1px solid #C6C6C8;
-            background-color: #E3E3E8;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text);
-            outline: none;
-            max-width: 160px;
+            padding: 6px 10px; border-radius: 8px; border: 1px solid #C6C6C8;
+            background-color: #E3E3E8; font-size: 14px; font-weight: 600; color: var(--text); outline: none; max-width: 160px;
         }
-
         .cat-manage-btn {
-            font-size: 13px;
-            background: none;
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            padding: 5px 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-weight: 600;
-            white-space: nowrap;
+            font-size: 13px; background: none; border: 1px solid var(--primary); color: var(--primary);
+            padding: 5px 10px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: 600; white-space: nowrap;
         }
-
-        .backup-btn {
-            font-size: 18px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            margin-left: 8px;
-            padding: 4px;
-        }
-
+        .backup-btn { font-size: 18px; background: none; border: none; cursor: pointer; margin-left: 8px; padding: 4px; }
         #search-bar {
-            width: 100%;
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: 1px solid #C6C6C8;
-            background-color: #E3E3E8;
-            font-size: 15px;
-            box-sizing: border-box;
-            outline: none;
+            width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid #C6C6C8;
+            background-color: #E3E3E8; font-size: 15px; box-sizing: border-box; outline: none;
         }
-
-        #notes-list {
-            flex: 1;
-            overflow-y: auto;
-            padding: 8px;
-            padding-bottom: 80px;
-        }
-
+        #notes-list { flex: 1; overflow-y: auto; padding: 8px; padding-bottom: 80px; }
         .note-item {
-            background-color: var(--card-bg);
-            padding: 12px 15px;
-            margin-bottom: 6px;
-            border-radius: 10px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            background-color: var(--card-bg); padding: 12px 15px; margin-bottom: 6px; border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); cursor: pointer; display: flex; align-items: center; gap: 12px;
         }
         .note-item:active { transform: scale(0.98); background-color: #f0f0f0; }
-        
-        .fav-icon {
-            color: var(--warning);
-            font-size: 18px;
-            flex-shrink: 0;
-            visibility: hidden;
-            width: 20px;
-            text-align: center;
-        }
+        .fav-icon { color: var(--warning); font-size: 18px; flex-shrink: 0; visibility: hidden; width: 20px; text-align: center; }
         .fav-icon.visible { visibility: visible; }
-
-        .lock-icon {
-            color: var(--text-sec);
-            font-size: 16px;
-            flex-shrink: 0;
-            width: 20px;
-            text-align: center;
-        }
-
+        .lock-icon { color: var(--text-sec); font-size: 16px; flex-shrink: 0; width: 20px; text-align: center; }
         .item-content { flex: 1; min-width: 0; }
         .note-title { font-weight: 600; font-size: 16px; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .note-preview { font-size: 13px; color: var(--text-sec); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
         .fab {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            background-color: var(--primary);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 28px;
-            box-shadow: 0 4px 10px rgba(0,122,255,0.4);
-            cursor: pointer;
-            border: none;
-            z-index: 15;
+            position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; background-color: var(--primary);
+            color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            font-size: 28px; box-shadow: 0 4px 10px rgba(0,122,255,0.4); cursor: pointer; border: none; z-index: 15;
         }
 
         /* --- Vues Plein Écran --- */
         .full-screen-view {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--bg);
-            z-index: 20;
-            display: none;
-            flex-direction: column;
-            overflow-y: auto;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg);
+            z-index: 20; display: none; flex-direction: column; overflow-y: auto;
         }
-
         .view-header {
-            background-color: var(--card-bg);
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid #C6C6C8;
-            position: sticky;
-            top: 0;
-            flex-shrink: 0;
+            background-color: var(--card-bg); padding: 15px; display: flex; align-items: center;
+            justify-content: space-between; border-bottom: 1px solid #C6C6C8; position: sticky; top: 0; flex-shrink: 0;
         }
-
-        .back-btn, .action-header-btn {
-            background: none;
-            border: none;
-            font-size: 16px;
-            cursor: pointer;
-            padding: 5px 10px;
-        }
+        .back-btn, .action-header-btn { background: none; border: none; font-size: 16px; cursor: pointer; padding: 5px 10px; }
         .back-btn { color: var(--primary); }
         .action-header-btn { color: var(--primary); font-weight: 600; }
-
         .view-content { padding: 20px; flex: 1; display: flex; flex-direction: column; }
 
         /* Détail */
-        .detail-header-row { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; flex-shrink: 0; }
+        .detail-header-row { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; flex-shrink: 0; flex-wrap: wrap; }
         .detail-title { font-size: 24px; font-weight: 700; margin: 0; }
         .detail-fav-star { color: var(--warning); font-size: 24px; line-height: 1; }
         .secure-badge {
-            background-color: var(--text-sec);
-            color: white;
-            font-size: 11px;
-            padding: 2px 6px;
-            border-radius: 4px;
-            text-transform: uppercase;
-            font-weight: 700;
-            margin-left: 10px;
-            display: none;
+            background-color: var(--text-sec); color: white; font-size: 11px; padding: 2px 6px;
+            border-radius: 4px; text-transform: uppercase; font-weight: 700; margin-left: 10px; display: none;
         }
         .secure-badge.visible { display: inline-block; }
-        
         .section-label { font-size: 12px; color: var(--text-sec); text-transform: uppercase; margin-bottom: 5px; margin-top: 15px; font-weight: 700; letter-spacing: 0.5px; flex-shrink: 0; }
-        
         .detail-box-info {
-            background-color: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            font-size: 16px;
-            line-height: 1.6;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            white-space: pre-wrap;
-            width: 100%;
-            box-sizing: border-box;
-            min-height: 200px; 
-            flex-grow: 1; 
-            overflow-y: auto;
-            border: 1px solid rgba(0,0,0,0.05);
+            background-color: var(--card-bg); padding: 20px; border-radius: 12px; font-size: 16px; line-height: 1.6;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08); white-space: pre-wrap; width: 100%; box-sizing: border-box;
+            min-height: 200px; flex-grow: 1; overflow-y: auto; border: 1px solid rgba(0,0,0,0.05);
         }
-
         .btn-delete-small {
-            background: none;
-            border: none;
-            color: var(--danger);
-            font-size: 14px;
-            text-decoration: underline;
-            cursor: pointer;
-            padding: 20px 0;
-            margin: 0 auto;
-            display: block;
-            opacity: 0.7;
-            flex-shrink: 0;
+            background: none; border: none; color: var(--danger); font-size: 14px; text-decoration: underline;
+            cursor: pointer; padding: 20px 0; margin: 0 auto; display: block; opacity: 0.7; flex-shrink: 0;
         }
+        .btn-change-pass {
+            background: none; border: 1px solid var(--primary); color: var(--primary); font-size: 14px;
+            padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 15px;
+            display: none; width: 100%;
+        }
+        .btn-change-pass.visible { display: block; }
 
         /* Formulaire & Catégories */
         .form-group { margin-bottom: 15px; }
         .form-label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-sec); font-size: 13px; text-transform: uppercase; }
-        
         .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 15px;
-            background-color: var(--card-bg);
-            border-radius: 10px;
-            border: 1px solid #C6C6C8;
-            margin-bottom: 15px;
+            display: flex; align-items: center; gap: 10px; padding: 15px; background-color: var(--card-bg);
+            border-radius: 10px; border: 1px solid #C6C6C8; margin-bottom: 15px;
         }
         .checkbox-group input { width: 20px; height: 20px; accent-color: var(--warning); }
         .checkbox-group label { font-size: 16px; font-weight: 500; color: var(--text); margin: 0; cursor: pointer; }
-
-        .secure-input-group {
-            display: none; /* Caché par défaut */
-            margin-top: 10px;
-            padding: 15px;
-            background-color: #FFF3CD;
-            border: 1px solid #FFEEBA;
-            border-radius: 10px;
-        }
+        .secure-input-group { display: none; margin-top: 10px; padding: 15px; background-color: #FFF3CD; border: 1px solid #FFEEBA; border-radius: 10px; }
         .secure-input-group.visible { display: block; }
-        
         .form-input, .form-textarea, .form-select {
-            width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid #C6C6C8;
-            background-color: var(--card-bg);
-            font-size: 16px;
-            font-family: inherit;
-            box-sizing: border-box;
-            color: #000;
+            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #C6C6C8;
+            background-color: var(--card-bg); font-size: 16px; font-family: inherit; box-sizing: border-box; color: #000;
         }
         .form-textarea { min-height: 300px; resize: vertical; }
-        
         .btn-save {
-            background-color: var(--primary);
-            color: white;
-            width: 100%;
-            padding: 16px;
-            border: none;
-            border-radius: 12px;
-            font-size: 17px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 20px;
-            margin-bottom: 40px;
+            background-color: var(--primary); color: white; width: 100%; padding: 16px; border: none;
+            border-radius: 12px; font-size: 17px; font-weight: 700; cursor: pointer; margin-top: 20px; margin-bottom: 40px;
         }
 
         /* Gestion Catégories */
         .cat-list-item {
-            background: var(--card-bg);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            background: var(--card-bg); padding: 15px; border-radius: 10px; margin-bottom: 10px;
+            display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
         .cat-name { font-weight: 600; font-size: 16px; }
         .cat-actions button {
-            background: none;
-            border: none;
-            font-size: 14px;
-            padding: 5px 10px;
-            cursor: pointer;
-            border-radius: 6px;
-            margin-left: 5px;
+            background: none; border: none; font-size: 14px; padding: 5px 10px; cursor: pointer;
+            border-radius: 6px; margin-left: 5px;
         }
         .btn-edit-cat { color: var(--primary); background-color: rgba(0,122,255,0.1); }
         .btn-del-cat { color: var(--danger); background-color: rgba(255,59,48,0.1); }
         .btn-add-cat {
-            width: 100%;
-            padding: 15px;
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            margin-top: 20px;
-            cursor: pointer;
+            width: 100%; padding: 15px; background-color: var(--primary); color: white; border: none;
+            border-radius: 10px; font-size: 16px; font-weight: 600; margin-top: 20px; cursor: pointer;
         }
 
         #file-input { display: none; }
         .slide-in { animation: slideIn 0.3s ease-out; }
         @keyframes slideIn { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-        /* Modal Mot de passe */
+        /* Modals */
         .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 100;
-            display: none;
-            justify-content: center;
-            align-items: center;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5);
+            z-index: 100; display: none; justify-content: center; align-items: center;
         }
         .modal-box {
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 350px;
-            text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            background: var(--card-bg); padding: 25px; border-radius: 15px; width: 90%; max-width: 350px;
+            text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
         .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 15px; }
         .modal-input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #C6C6C8;
-            border-radius: 8px;
-            font-size: 16px;
-            margin-bottom: 15px;
-            box-sizing: border-box;
+            width: 100%; padding: 12px; border: 1px solid #C6C6C8; border-radius: 8px;
+            font-size: 16px; margin-bottom: 15px; box-sizing: border-box;
         }
         .modal-btns { display: flex; gap: 10px; justify-content: center; }
-        .modal-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-        }
+        .modal-btn { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
         .modal-cancel { background: #E5E5EA; color: #000; }
         .modal-confirm { background: var(--primary); color: white; }
-
+        .modal-error { color: var(--danger); font-size: 13px; margin-top: 10px; display: none; }
     </style>
 </head>
 <body>
@@ -403,9 +181,7 @@
                     <select id="cat-filter" class="cat-select" onchange="renderList()">
                         <option value="all">Toutes les cat.</option>
                     </select>
-                    
                     <button class="cat-manage-btn" onclick="openCatManager()">Cat.</button>
-                    
                     <button class="backup-btn" onclick="exportData()" title="Sauvegarder">💾</button>
                     <button class="backup-btn restore" onclick="triggerImport()" title="Restaurer">📂</button>
                 </div>
@@ -432,6 +208,11 @@
             <div class="section-label">Contenu de la note</div>
             <div class="detail-box-info" id="d-info"></div>
 
+            <!-- Bouton changer mot de passe (visible seulement si note sécurisée ouverte) -->
+            <button id="btn-change-pass" class="btn-change-pass" onclick="openChangePassModal()">
+                🔑 Changer le mot de passe
+            </button>
+
             <button class="btn-delete-small" onclick="deleteCurrentNote()">Supprimer cette note</button>
         </div>
     </div>
@@ -445,40 +226,33 @@
         </div>
         <div class="view-content">
             <input type="hidden" id="f-id">
-            
             <div class="form-group">
                 <label class="form-label">Titre</label>
                 <input type="text" id="f-title" class="form-input" placeholder="Ex: Idée de projet">
             </div>
-
             <div class="form-group">
                 <label class="form-label">Catégorie</label>
                 <select id="f-cat" class="form-select"></select>
             </div>
-
             <div class="checkbox-group">
                 <input type="checkbox" id="f-fav">
                 <label for="f-fav">Favori ★</label>
             </div>
-
             <div class="checkbox-group" style="border-color: var(--warning); background-color: #FFFBF0;">
                 <input type="checkbox" id="f-secure" onchange="toggleSecureInput()">
                 <label for="f-secure">Note Sécurisée 🔒</label>
             </div>
-            
             <div id="secure-password-container" class="secure-input-group">
                 <label class="form-label" style="color: #856404;">Mot de passe pour cette note</label>
                 <input type="password" id="f-secure-pass" class="form-input" placeholder="Entrez un mot de passe fort">
                 <div style="font-size: 12px; color: #856404; margin-top: 5px;">
-                    ⚠️ Si vous oubliez ce mot de passe, le contenu sera perdu à jamais. Il n'est pas stocké ailleurs.
+                    ⚠️ Si vous oubliez ce mot de passe, le contenu sera perdu à jamais.
                 </div>
             </div>
-
             <div class="form-group">
                 <label class="form-label">Texte libre</label>
                 <textarea id="f-info" class="form-textarea" placeholder="Écrivez votre note ici..."></textarea>
             </div>
-
             <button class="btn-save" onclick="saveNote()">Enregistrer</button>
         </div>
     </div>
@@ -496,17 +270,35 @@
         </div>
     </div>
 
-    <!-- MODAL MOT DE PASSE -->
+    <!-- MODAL OUVERTURE (Mot de passe) -->
     <div id="password-modal" class="modal-overlay">
         <div class="modal-box">
             <div class="modal-title">🔒 Note Sécurisée</div>
-            <p style="font-size: 14px; color: #666; margin-bottom: 15px;">Entrez le mot de passe pour déchiffrer cette note.</p>
+            <p style="font-size: 14px; color: #666; margin-bottom: 15px;">Entrez le mot de passe pour déchiffrer.</p>
             <input type="password" id="modal-pass-input" class="modal-input" placeholder="Mot de passe">
             <div class="modal-btns">
-                <button class="modal-btn modal-cancel" onclick="closeModal()">Annuler</button>
+                <button class="modal-btn modal-cancel" onclick="closeModal('password-modal')">Annuler</button>
                 <button class="modal-btn modal-confirm" onclick="submitPassword()">Ouvrir</button>
             </div>
-            <div id="modal-error" style="color: var(--danger); font-size: 13px; margin-top: 10px; display: none;">Mot de passe incorrect !</div>
+            <div id="modal-error" class="modal-error">Mot de passe incorrect !</div>
+        </div>
+    </div>
+
+    <!-- MODAL CHANGEMENT MOT DE PASSE -->
+    <div id="change-pass-modal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-title">🔑 Changer le mot de passe</div>
+            <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Note: <span id="cp-note-title" style="font-weight:bold;"></span></p>
+            
+            <input type="password" id="cp-old-pass" class="modal-input" placeholder="Ancien mot de passe">
+            <input type="password" id="cp-new-pass" class="modal-input" placeholder="Nouveau mot de passe">
+            <input type="password" id="cp-confirm-pass" class="modal-input" placeholder="Confirmer nouveau mot de passe">
+            
+            <div class="modal-btns">
+                <button class="modal-btn modal-cancel" onclick="closeModal('change-pass-modal')">Annuler</button>
+                <button class="modal-btn modal-confirm" onclick="submitChangePassword()">Valider</button>
+            </div>
+            <div id="cp-error" class="modal-error"></div>
         </div>
     </div>
 
@@ -518,12 +310,13 @@
         let categories = [];
         const DEFAULT_CAT_NAME = "Aucune catégorie";
         let currentId = null;
-        let pendingNoteId = null; // Pour la modale de mot de passe
+        let pendingNoteId = null; 
+        let decryptedContentCache = null; // Stocke temporairement le contenu déchiffré
 
-        const STORAGE_NOTES = 'myNotesData_v2'; // Version 2 pour changer de format
+        const STORAGE_NOTES = 'myNotesData_v2';
         const STORAGE_CATS = 'myNotesCats_v1';
 
-        // --- CRYPTO FUNCTIONS (Web Crypto API) ---
+        // --- CRYPTO FUNCTIONS ---
         const ALGO = 'AES-GCM';
         const ITER = 100000;
 
@@ -546,13 +339,10 @@
             const enc = new TextEncoder();
             const encrypted = await crypto.subtle.encrypt({ name: ALGO, iv: iv }, key, enc.encode(text));
             
-            // Pack: Salt(16) + IV(12) + EncryptedData
             const buffer = new Uint8Array(salt.length + iv.length + encrypted.byteLength);
             buffer.set(salt, 0);
             buffer.set(iv, 16);
             buffer.set(new Uint8Array(encrypted), 28);
-            
-            // Convert to Base64 for easy JSON storage
             return btoa(String.fromCharCode(...buffer));
         }
 
@@ -568,10 +358,9 @@
 
                 const key = await deriveKey(password, salt);
                 const decrypted = await crypto.subtle.decrypt({ name: ALGO, iv: iv }, key, data);
-                
                 return new TextDecoder().decode(decrypted);
             } catch (e) {
-                throw new Error("Invalid password or corrupted data");
+                throw new Error("Invalid password");
             }
         }
 
@@ -579,23 +368,16 @@
         function init() {
             const storedNotes = localStorage.getItem(STORAGE_NOTES);
             const storedCats = localStorage.getItem(STORAGE_CATS);
-
-            if (storedNotes) notes = JSON.parse(storedNotes);
-            else notes = [];
-
+            if (storedNotes) notes = JSON.parse(storedNotes); else notes = [];
             if (storedCats) {
                 categories = JSON.parse(storedCats);
-                if (!categories.find(c => c.name === DEFAULT_CAT_NAME)) {
-                    categories.unshift({ id: Date.now(), name: DEFAULT_CAT_NAME });
-                }
+                if (!categories.find(c => c.name === DEFAULT_CAT_NAME)) categories.unshift({ id: Date.now(), name: DEFAULT_CAT_NAME });
             } else {
                 categories = [{ id: 1, name: DEFAULT_CAT_NAME }];
             }
-
             updateCatSelects();
             const defaultCat = categories.find(c => c.name === DEFAULT_CAT_NAME);
             if (defaultCat) document.getElementById('cat-filter').value = defaultCat.id;
-            
             renderList();
         }
 
@@ -610,22 +392,13 @@
             const filterSelect = document.getElementById('cat-filter');
             const formSelect = document.getElementById('f-cat');
             const currentFilter = filterSelect.value;
-
             filterSelect.innerHTML = '<option value="all">Toutes les cat.</option>';
             formSelect.innerHTML = '';
-
             const sortedCats = [...categories].sort((a, b) => a.name.localeCompare(b.name, 'fr', { sensitivity: 'base' }));
-
             sortedCats.forEach(cat => {
-                const opt1 = document.createElement('option');
-                opt1.value = cat.id; opt1.textContent = cat.name;
-                filterSelect.appendChild(opt1);
-
-                const opt2 = document.createElement('option');
-                opt2.value = cat.id; opt2.textContent = cat.name;
-                formSelect.appendChild(opt2);
+                const opt1 = document.createElement('option'); opt1.value = cat.id; opt1.textContent = cat.name; filterSelect.appendChild(opt1);
+                const opt2 = document.createElement('option'); opt2.value = cat.id; opt2.textContent = cat.name; formSelect.appendChild(opt2);
             });
-
             if (currentFilter && categories.find(c => c.id == currentFilter)) filterSelect.value = currentFilter;
             else {
                 const defaultCat = categories.find(c => c.name === DEFAULT_CAT_NAME);
@@ -638,13 +411,10 @@
             const filterCat = document.getElementById('cat-filter').value;
             const rawSearchText = document.getElementById('search-bar').value;
             const searchText = rawSearchText.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
-
             listContainer.innerHTML = '';
             let finalList = [];
 
             if (searchText !== "") {
-                // Search only in titles for encrypted notes, content for normal ones (if we could, but we can't decrypt all)
-                // For security, search only matches titles for encrypted notes.
                 finalList = notes.filter(note => {
                     const titleNorm = (note.title || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
                     if (titleNorm.includes(searchText)) return true;
@@ -658,7 +428,6 @@
             } else {
                 const favorites = notes.filter(note => note.isFav);
                 favorites.sort((a, b) => a.title.localeCompare(b.title, 'fr', { sensitivity: 'base' }));
-
                 const others = notes.filter(note => {
                     if (note.isFav) return false;
                     if (filterCat === 'all') return true;
@@ -676,18 +445,12 @@
             finalList.forEach(note => {
                 const item = document.createElement('div');
                 item.className = 'note-item';
-                
                 const favStar = note.isFav ? '★' : '☆';
                 const favClass = note.isFav ? 'visible' : '';
                 const lockIcon = note.isSecure ? '🔒' : '';
-                
-                // Preview logic
                 let previewText = '';
-                if (!note.isSecure && note.info) {
-                    previewText = note.info.replace(/\n/g, ' ');
-                } else if (note.isSecure) {
-                    previewText = "Contenu protégé";
-                }
+                if (!note.isSecure && note.info) previewText = note.info.replace(/\n/g, ' ');
+                else if (note.isSecure) previewText = "Contenu protégé";
 
                 item.innerHTML = `
                     <div class="fav-icon $${favClass}">$${favStar}</div>
@@ -705,6 +468,7 @@
         function handleNoteClick(note) {
             if (note.isSecure) {
                 pendingNoteId = note.id;
+                decryptedContentCache = null;
                 document.getElementById('modal-pass-input').value = '';
                 document.getElementById('modal-error').style.display = 'none';
                 document.getElementById('password-modal').style.display = 'flex';
@@ -714,36 +478,26 @@
             }
         }
 
-        // --- MODAL LOGIC ---
-        function closeModal() {
-            document.getElementById('password-modal').style.display = 'none';
-            pendingNoteId = null;
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            if (modalId === 'password-modal') pendingNoteId = null;
         }
 
         async function submitPassword() {
             const pass = document.getElementById('modal-pass-input').value;
             const note = notes.find(n => n.id === pendingNoteId);
             if (!note || !pass) return;
-
             try {
-                const decryptedText = await decryptContent(note.info, pass);
-                // Success: Open detail view with decrypted text temporarily
-                openDetail(pendingNoteId, decryptedText);
-                closeModal();
+                decryptedContentCache = await decryptContent(note.info, pass);
+                openDetail(pendingNoteId);
+                closeModal('password-modal');
             } catch (e) {
                 document.getElementById('modal-error').style.display = 'block';
-                document.getElementById('modal-pass-input').classList.add('shake');
-                setTimeout(() => document.getElementById('modal-pass-input').classList.remove('shake'), 500);
             }
         }
-        
-        // Allow Enter key in modal
-        document.getElementById('modal-pass-input').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') submitPassword();
-        });
 
         // --- DETAIL VIEW ---
-        function openDetail(id, decryptedContentOverride = null) {
+        function openDetail(id) {
             currentId = id;
             const note = notes.find(n => n.id === id);
             if (!note) return;
@@ -752,15 +506,92 @@
             document.getElementById('d-fav-star').style.display = note.isFav ? 'block' : 'none';
             document.getElementById('d-secure-badge').className = `secure-badge ${note.isSecure ? 'visible' : ''}`;
             
-            // Use override if provided (decrypted), else use stored info (or placeholder)
-            const content = decryptedContentOverride !== null ? decryptedContentOverride : (note.info || "Aucun contenu.");
-            document.getElementById('d-info').textContent = content;
+            const btnChange = document.getElementById('btn-change-pass');
+            
+            if (note.isSecure) {
+                if (decryptedContentCache !== null) {
+                    // Ouverte avec succès
+                    document.getElementById('d-info').textContent = decryptedContentCache;
+                    btnChange.classList.add('visible');
+                } else {
+                    // Ouverte en mode "édit" ou autre sans déchiffrement préalable (cas rare)
+                    document.getElementById('d-info').textContent = "Contenu chiffré. Veuillez ouvrir via la liste.";
+                    btnChange.classList.remove('visible');
+                }
+            } else {
+                document.getElementById('d-info').textContent = note.info || "Aucun contenu.";
+                btnChange.classList.remove('visible');
+            }
 
             const view = document.getElementById('detail-view');
             view.style.display = 'flex';
             view.classList.add('slide-in');
         }
 
+        // --- CHANGE PASSWORD LOGIC ---
+        function openChangePassModal() {
+            const note = notes.find(n => n.id === currentId);
+            if (!note) return;
+            document.getElementById('cp-note-title').textContent = note.title;
+            document.getElementById('cp-old-pass').value = '';
+            document.getElementById('cp-new-pass').value = '';
+            document.getElementById('cp-confirm-pass').value = '';
+            document.getElementById('cp-error').textContent = '';
+            document.getElementById('cp-error').style.display = 'none';
+            document.getElementById('change-pass-modal').style.display = 'flex';
+            document.getElementById('cp-old-pass').focus();
+        }
+
+        async function submitChangePassword() {
+            const oldPass = document.getElementById('cp-old-pass').value;
+            const newPass = document.getElementById('cp-new-pass').value;
+            const confirmPass = document.getElementById('cp-confirm-pass').value;
+            const errorDiv = document.getElementById('cp-error');
+
+            if (!oldPass || !newPass || !confirmPass) {
+                errorDiv.textContent = "Tous les champs sont obligatoires.";
+                errorDiv.style.display = 'block';
+                return;
+            }
+            if (newPass !== confirmPass) {
+                errorDiv.textContent = "Les nouveaux mots de passe ne correspondent pas.";
+                errorDiv.style.display = 'block';
+                return;
+            }
+            if (newPass.length < 4) {
+                errorDiv.textContent = "Le nouveau mot de passe est trop court.";
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            const note = notes.find(n => n.id === currentId);
+            if (!note) return;
+
+            try {
+                // 1. Vérifier l'ancien mot de passe en déchiffrant
+                const currentContent = await decryptContent(note.info, oldPass);
+                
+                // 2. Rechiffrer avec le nouveau
+                const newEncryptedContent = await encryptContent(currentContent, newPass);
+                
+                // 3. Sauvegarder
+                note.info = newEncryptedContent;
+                saveAll();
+                
+                // 4. Mettre à jour le cache et fermer
+                decryptedContentCache = currentContent;
+                closeModal('change-pass-modal');
+                alert("Mot de passe changé avec succès !");
+                // Rafraîchir la vue détail (optionnel, car le contenu est déjà là)
+                openDetail(currentId); 
+                
+            } catch (e) {
+                errorDiv.textContent = "Ancien mot de passe incorrect.";
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        // --- FORMULAIRE ---
         function startEditProcess() {
             if (!currentId) return;
             const note = notes.find(n => n.id === currentId);
@@ -772,13 +603,18 @@
             document.getElementById('f-fav').checked = note.isFav || false;
             document.getElementById('f-secure').checked = note.isSecure || false;
             
-            // If secure, we cannot show the content in the textarea nor the password.
-            // We clear the textarea and password field to avoid confusion.
-            // User must re-type content or copy-paste from the view if they want to modify.
             if (note.isSecure) {
                 document.getElementById('f-info').value = ""; 
                 document.getElementById('f-secure-pass').value = "";
-                alert("Cette note est sécurisée. Pour la modifier, vous devez réécrire le contenu et définir un nouveau mot de passe (ou le même). Le contenu déchiffré n'est pas rechargé dans le formulaire par sécurité.");
+                // Optionnel : Pré-remplir avec le contenu déchiffré si on vient de l'ouvrir ?
+                // Pour sécurité maximale, on laisse vide, mais on pourrait faire :
+                if (decryptedContentCache !== null) {
+                     if(confirm("Voulez-vous pré-remplir le texte avec le contenu déchiffré pour le modifier ?")) {
+                         document.getElementById('f-info').value = decryptedContentCache;
+                     }
+                } else {
+                    alert("Cette note est sécurisée. Le contenu n'est pas chargé. Vous devez réécrire le texte ou le copier depuis la vue détail.");
+                }
             } else {
                 document.getElementById('f-info').value = note.info || '';
                 document.getElementById('f-secure-pass').value = "";
@@ -793,8 +629,8 @@
 
         function openForm() {
             currentId = null;
+            decryptedContentCache = null;
             const defaultCat = categories.find(c => c.name === DEFAULT_CAT_NAME);
-            
             document.getElementById('f-id').value = '';
             document.getElementById('f-title').value = '';
             document.getElementById('f-cat').value = defaultCat ? defaultCat.id : categories[0].id;
@@ -802,10 +638,8 @@
             document.getElementById('f-secure').checked = false;
             document.getElementById('f-info').value = '';
             document.getElementById('f-secure-pass').value = '';
-            
             toggleSecureInput();
             document.getElementById('form-title-text').textContent = "Nouvelle Note";
-            
             const formView = document.getElementById('form-view');
             formView.style.display = 'flex';
             formView.classList.add('slide-in');
@@ -821,7 +655,6 @@
         async function saveNote() {
             const idVal = document.getElementById('f-id').value;
             const title = document.getElementById('f-title').value.trim();
-            
             if (!title) { alert("Le titre est obligatoire."); return; }
 
             const isSecure = document.getElementById('f-secure').checked;
@@ -830,14 +663,9 @@
 
             if (isSecure) {
                 if (!securePass) { alert("Un mot de passe est requis pour une note sécurisée."); return; }
-                if (!finalContent) { alert("Le contenu ne peut pas être vide pour une note sécurisée."); return; }
-                
-                // Encrypt
-                try {
-                    finalContent = await encryptContent(finalContent, securePass);
-                } catch (e) {
-                    alert("Erreur lors du chiffrement."); return;
-                }
+                if (!finalContent) { alert("Le contenu ne peut pas être vide."); return; }
+                try { finalContent = await encryptContent(finalContent, securePass); } 
+                catch (e) { alert("Erreur chiffrement."); return; }
             }
 
             const newData = {
@@ -855,7 +683,7 @@
             } else {
                 notes.push({ id: Date.now(), ...newData });
             }
-
+            decryptedContentCache = null; // Reset cache on save
             saveAll();
             closeView('form-view');
         }
@@ -864,24 +692,23 @@
             if (!currentId) return;
             if (confirm("Supprimer cette note ?")) {
                 notes = notes.filter(n => n.id !== currentId);
+                decryptedContentCache = null;
                 saveAll();
                 closeView('detail-view');
             }
         }
 
-        // --- CATEGORIES (Same as before) ---
+        // --- CATEGORIES ---
         function openCatManager() {
             renderCatList();
             const view = document.getElementById('cat-manager-view');
             view.style.display = 'flex';
             view.classList.add('slide-in');
         }
-
         function renderCatList() {
             const container = document.getElementById('cat-list-container');
             container.innerHTML = '';
             const sortedCats = [...categories].sort((a, b) => a.name.localeCompare(b.name, 'fr', { sensitivity: 'base' }));
-            
             sortedCats.forEach(cat => {
                 const isDefault = cat.name === DEFAULT_CAT_NAME;
                 const item = document.createElement('div');
@@ -896,33 +723,30 @@
                 container.appendChild(item);
             });
         }
-
         function createNewCategory() {
             const name = prompt("Nom de la nouvelle catégorie :");
             if (name && name.trim() !== "") {
-                if (categories.find(c => c.name.toLowerCase() === name.trim().toLowerCase())) { alert("Cette catégorie existe déjà."); return; }
+                if (categories.find(c => c.name.toLowerCase() === name.trim().toLowerCase())) { alert("Existe déjà."); return; }
                 categories.push({ id: Date.now(), name: name.trim() });
                 saveAll();
                 renderCatList();
             }
         }
-
         function editCategory(id) {
             const cat = categories.find(c => c.id === id);
             if (!cat) return;
             const newName = prompt("Nouveau nom :", cat.name);
             if (newName && newName.trim() !== "") {
-                if (categories.find(c => c.name.toLowerCase() === newName.trim().toLowerCase() && c.id !== id)) { alert("Cette catégorie existe déjà."); return; }
+                if (categories.find(c => c.name.toLowerCase() === newName.trim().toLowerCase() && c.id !== id)) { alert("Existe déjà."); return; }
                 cat.name = newName.trim();
                 saveAll();
                 renderCatList();
             }
         }
-
         function deleteCategory(id) {
             const cat = categories.find(c => c.id === id);
             if (!cat || cat.name === DEFAULT_CAT_NAME) return;
-            if (confirm(`Supprimer la catégorie "$${cat.name}" ?\nLes notes associées seront déplacées vers "$${DEFAULT_CAT_NAME}".`)) {
+            if (confirm(`Supprimer "$${cat.name}" ? Les notes iront dans "$${DEFAULT_CAT_NAME}".`)) {
                 const defaultCat = categories.find(c => c.name === DEFAULT_CAT_NAME);
                 notes.forEach(note => { if (note.categoryId === id) note.categoryId = defaultCat.id; });
                 categories = categories.filter(c => c.id !== id);
@@ -932,8 +756,7 @@
         }
 
         // --- EXPORT / IMPORT ---
-        function exportData() {
-            const data = { app: "MesNotesSecure", version: 2, notes: notes, categories: categories };
+        function exportData() {const data = { app: "MesNotesSecure", version: 2, notes: notes, categories: categories };
             const dataStr = JSON.stringify(data, null, 2);
             const blob = new Blob([dataStr], { type: "application/json" });
             const url = URL.createObjectURL(blob);
@@ -977,12 +800,30 @@
             const view = document.getElementById(viewId);
             view.style.display = 'none';
             view.classList.remove('slide-in');
-            if (viewId === 'detail-view') currentId = null; // Fin de l'instruction précédente
+            if (viewId === 'detail-view') {
+                currentId = null;
+                decryptedContentCache = null; // Sécurité : on vide le cache quand on ferme la vue
+            }
         }
 
         // Écouteurs d'événements globaux
         document.getElementById('search-bar').addEventListener('input', () => renderList());
         
+        // Gestion de la touche Entrée pour les modales
+        document.getElementById('modal-pass-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') submitPassword();
+        });
+        
+        document.getElementById('cp-old-pass').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') document.getElementById('cp-new-pass').focus();
+        });
+        document.getElementById('cp-new-pass').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') document.getElementById('cp-confirm-pass').focus();
+        });
+        document.getElementById('cp-confirm-pass').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') submitChangePassword();
+        });
+
         // Initialisation au chargement de la page
         init();
     </script>
