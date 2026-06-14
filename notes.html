@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mes Notes</title>
+    <title>Mes Notes Sécurisées</title>
     <style>
         :root {
             --primary: #007AFF;
@@ -137,6 +137,14 @@
         }
         .fav-icon.visible { visibility: visible; }
 
+        .lock-icon {
+            color: var(--text-sec);
+            font-size: 16px;
+            flex-shrink: 0;
+            width: 20px;
+            text-align: center;
+        }
+
         .item-content { flex: 1; min-width: 0; }
         .note-title { font-weight: 600; font-size: 16px; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .note-preview { font-size: 13px; color: var(--text-sec); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -202,6 +210,18 @@
         .detail-header-row { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; flex-shrink: 0; }
         .detail-title { font-size: 24px; font-weight: 700; margin: 0; }
         .detail-fav-star { color: var(--warning); font-size: 24px; line-height: 1; }
+        .secure-badge {
+            background-color: var(--text-sec);
+            color: white;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-left: 10px;
+            display: none;
+        }
+        .secure-badge.visible { display: inline-block; }
         
         .section-label { font-size: 12px; color: var(--text-sec); text-transform: uppercase; margin-bottom: 5px; margin-top: 15px; font-weight: 700; letter-spacing: 0.5px; flex-shrink: 0; }
         
@@ -251,6 +271,16 @@
         }
         .checkbox-group input { width: 20px; height: 20px; accent-color: var(--warning); }
         .checkbox-group label { font-size: 16px; font-weight: 500; color: var(--text); margin: 0; cursor: pointer; }
+
+        .secure-input-group {
+            display: none; /* Caché par défaut */
+            margin-top: 10px;
+            padding: 15px;
+            background-color: #FFF3CD;
+            border: 1px solid #FFEEBA;
+            border-radius: 10px;
+        }
+        .secure-input-group.visible { display: block; }
         
         .form-input, .form-textarea, .form-select {
             width: 100%;
@@ -318,6 +348,48 @@
         #file-input { display: none; }
         .slide-in { animation: slideIn 0.3s ease-out; }
         @keyframes slideIn { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        /* Modal Mot de passe */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 100;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-box {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 350px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 15px; }
+        .modal-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #C6C6C8;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+        .modal-btns { display: flex; gap: 10px; justify-content: center; }
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .modal-cancel { background: #E5E5EA; color: #000; }
+        .modal-confirm { background: var(--primary); color: white; }
+
     </style>
 </head>
 <body>
@@ -354,6 +426,7 @@
             <div class="detail-header-row">
                 <div class="detail-title" id="d-title">Titre</div>
                 <div class="detail-fav-star" id="d-fav-star" style="display:none;">★</div>
+                <div class="secure-badge" id="d-secure-badge">🔒 Sécurisée</div>
             </div>
             
             <div class="section-label">Contenu de la note</div>
@@ -388,6 +461,19 @@
                 <label for="f-fav">Favori ★</label>
             </div>
 
+            <div class="checkbox-group" style="border-color: var(--warning); background-color: #FFFBF0;">
+                <input type="checkbox" id="f-secure" onchange="toggleSecureInput()">
+                <label for="f-secure">Note Sécurisée 🔒</label>
+            </div>
+            
+            <div id="secure-password-container" class="secure-input-group">
+                <label class="form-label" style="color: #856404;">Mot de passe pour cette note</label>
+                <input type="password" id="f-secure-pass" class="form-input" placeholder="Entrez un mot de passe fort">
+                <div style="font-size: 12px; color: #856404; margin-top: 5px;">
+                    ⚠️ Si vous oubliez ce mot de passe, le contenu sera perdu à jamais. Il n'est pas stocké ailleurs.
+                </div>
+            </div>
+
             <div class="form-group">
                 <label class="form-label">Texte libre</label>
                 <textarea id="f-info" class="form-textarea" placeholder="Écrivez votre note ici..."></textarea>
@@ -410,19 +496,86 @@
         </div>
     </div>
 
+    <!-- MODAL MOT DE PASSE -->
+    <div id="password-modal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-title">🔒 Note Sécurisée</div>
+            <p style="font-size: 14px; color: #666; margin-bottom: 15px;">Entrez le mot de passe pour déchiffrer cette note.</p>
+            <input type="password" id="modal-pass-input" class="modal-input" placeholder="Mot de passe">
+            <div class="modal-btns">
+                <button class="modal-btn modal-cancel" onclick="closeModal()">Annuler</button>
+                <button class="modal-btn modal-confirm" onclick="submitPassword()">Ouvrir</button>
+            </div>
+            <div id="modal-error" style="color: var(--danger); font-size: 13px; margin-top: 10px; display: none;">Mot de passe incorrect !</div>
+        </div>
+    </div>
+
     <input type="file" id="file-input" accept=".json" onchange="importData(this)">
 
     <script>
-        // VARIABLES INDÉPENDANTES
+        // --- VARIABLES ---
         let notes = [];
         let categories = [];
         const DEFAULT_CAT_NAME = "Aucune catégorie";
         let currentId = null;
+        let pendingNoteId = null; // Pour la modale de mot de passe
 
-        // CLÉS DE STOCKAGE UNIQUES
-        const STORAGE_NOTES = 'myNotesData_v1';
+        const STORAGE_NOTES = 'myNotesData_v2'; // Version 2 pour changer de format
         const STORAGE_CATS = 'myNotesCats_v1';
 
+        // --- CRYPTO FUNCTIONS (Web Crypto API) ---
+        const ALGO = 'AES-GCM';
+        const ITER = 100000;
+
+        async function deriveKey(password, salt) {
+            const enc = new TextEncoder();
+            const keyMaterial = await crypto.subtle.importKey("raw", enc.encode(password), "PBKDF2", false, ["deriveKey"]);
+            return crypto.subtle.deriveKey(
+                { name: "PBKDF2", salt: salt, iterations: ITER, hash: "SHA-256" },
+                keyMaterial,
+                { name: ALGO, length: 256 },
+                false,
+                ["encrypt", "decrypt"]
+            );
+        }
+
+        async function encryptContent(text, password) {
+            const salt = crypto.getRandomValues(new Uint8Array(16));
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            const key = await deriveKey(password, salt);
+            const enc = new TextEncoder();
+            const encrypted = await crypto.subtle.encrypt({ name: ALGO, iv: iv }, key, enc.encode(text));
+            
+            // Pack: Salt(16) + IV(12) + EncryptedData
+            const buffer = new Uint8Array(salt.length + iv.length + encrypted.byteLength);
+            buffer.set(salt, 0);
+            buffer.set(iv, 16);
+            buffer.set(new Uint8Array(encrypted), 28);
+            
+            // Convert to Base64 for easy JSON storage
+            return btoa(String.fromCharCode(...buffer));
+        }
+
+        async function decryptContent(base64Data, password) {
+            try {
+                const binaryString = atob(base64Data);
+                const bytes = new Uint8Array(binaryString.length);
+                for (let i = 0; i < binaryString.length; i++) bytes[i] = binaryString.charCodeAt(i);
+
+                const salt = bytes.slice(0, 16);
+                const iv = bytes.slice(16, 28);
+                const data = bytes.slice(28);
+
+                const key = await deriveKey(password, salt);
+                const decrypted = await crypto.subtle.decrypt({ name: ALGO, iv: iv }, key, data);
+                
+                return new TextDecoder().decode(decrypted);
+            } catch (e) {
+                throw new Error("Invalid password or corrupted data");
+            }
+        }
+
+        // --- INIT & STORAGE ---
         function init() {
             const storedNotes = localStorage.getItem(STORAGE_NOTES);
             const storedCats = localStorage.getItem(STORAGE_CATS);
@@ -440,11 +593,8 @@
             }
 
             updateCatSelects();
-            
             const defaultCat = categories.find(c => c.name === DEFAULT_CAT_NAME);
-            if (defaultCat) {
-                document.getElementById('cat-filter').value = defaultCat.id;
-            }
+            if (defaultCat) document.getElementById('cat-filter').value = defaultCat.id;
             
             renderList();
         }
@@ -464,25 +614,20 @@
             filterSelect.innerHTML = '<option value="all">Toutes les cat.</option>';
             formSelect.innerHTML = '';
 
-            const sortedCats = [...categories].sort((a, b) => {
-                return a.name.localeCompare(b.name, 'fr', { sensitivity: 'base' });
-            });
+            const sortedCats = [...categories].sort((a, b) => a.name.localeCompare(b.name, 'fr', { sensitivity: 'base' }));
 
             sortedCats.forEach(cat => {
                 const opt1 = document.createElement('option');
-                opt1.value = cat.id;
-                opt1.textContent = cat.name;
+                opt1.value = cat.id; opt1.textContent = cat.name;
                 filterSelect.appendChild(opt1);
 
                 const opt2 = document.createElement('option');
-                opt2.value = cat.id;
-                opt2.textContent = cat.name;
+                opt2.value = cat.id; opt2.textContent = cat.name;
                 formSelect.appendChild(opt2);
             });
 
-            if (currentFilter && categories.find(c => c.id == currentFilter)) {
-                filterSelect.value = currentFilter;
-            } else {
+            if (currentFilter && categories.find(c => c.id == currentFilter)) filterSelect.value = currentFilter;
+            else {
                 const defaultCat = categories.find(c => c.name === DEFAULT_CAT_NAME);
                 if (defaultCat) filterSelect.value = defaultCat.id;
             }
@@ -492,36 +637,34 @@
             const listContainer = document.getElementById('notes-list');
             const filterCat = document.getElementById('cat-filter').value;
             const rawSearchText = document.getElementById('search-bar').value;
-            
             const searchText = rawSearchText.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
 
             listContainer.innerHTML = '';
-            
             let finalList = [];
 
-            // --- CAS 1 : RECHERCHE ACTIVE ---
             if (searchText !== "") {
+                // Search only in titles for encrypted notes, content for normal ones (if we could, but we can't decrypt all)
+                // For security, search only matches titles for encrypted notes.
                 finalList = notes.filter(note => {
                     const titleNorm = (note.title || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                    const infoNorm = (note.info || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                    return titleNorm.includes(searchText) || infoNorm.includes(searchText);
+                    if (titleNorm.includes(searchText)) return true;
+                    if (!note.isSecure) {
+                        const infoNorm = (note.info || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                        return infoNorm.includes(searchText);
+                    }
+                    return false;
                 });
                 finalList.sort((a, b) => a.title.localeCompare(b.title, 'fr', { sensitivity: 'base' }));
-            } 
-            // --- CAS 2 : RECHERCHE VIDE ---
-            else {
-                // 1. TOUS LES FAVORIS (Ignore le filtre catégorie)
+            } else {
                 const favorites = notes.filter(note => note.isFav);
                 favorites.sort((a, b) => a.title.localeCompare(b.title, 'fr', { sensitivity: 'base' }));
 
-                // 2. LES AUTRES (Respecte le filtre catégorie)
                 const others = notes.filter(note => {
-                    if (note.isFav) return false; 
+                    if (note.isFav) return false;
                     if (filterCat === 'all') return true;
                     return note.categoryId == filterCat;
                 });
                 others.sort((a, b) => a.title.localeCompare(b.title, 'fr', { sensitivity: 'base' }));
-
                 finalList = [...favorites, ...others];
             }
 
@@ -536,28 +679,82 @@
                 
                 const favStar = note.isFav ? '★' : '☆';
                 const favClass = note.isFav ? 'visible' : '';
-                const previewText = note.info ? note.info.replace(/\n/g, ' ') : '';
+                const lockIcon = note.isSecure ? '🔒' : '';
+                
+                // Preview logic
+                let previewText = '';
+                if (!note.isSecure && note.info) {
+                    previewText = note.info.replace(/\n/g, ' ');
+                } else if (note.isSecure) {
+                    previewText = "Contenu protégé";
+                }
 
                 item.innerHTML = `
-                    <div class="fav-icon ${favClass}">${favStar}</div>
+                    <div class="fav-icon $${favClass}">$${favStar}</div>
+                    <div class="lock-icon">${lockIcon}</div>
                     <div class="item-content">
                         <div class="note-title">${note.title}</div>
-                        ${previewText ? `<div class="note-preview">${previewText}</div>` : ''}
+                        $${previewText ? `<div class="note-preview">$${previewText}</div>` : ''}
                     </div>
                 `;
-                item.onclick = () => openDetail(note.id);
+                item.onclick = () => handleNoteClick(note);
                 listContainer.appendChild(item);
             });
         }
 
-        function openDetail(id) {
+        function handleNoteClick(note) {
+            if (note.isSecure) {
+                pendingNoteId = note.id;
+                document.getElementById('modal-pass-input').value = '';
+                document.getElementById('modal-error').style.display = 'none';
+                document.getElementById('password-modal').style.display = 'flex';
+                document.getElementById('modal-pass-input').focus();
+            } else {
+                openDetail(note.id);
+            }
+        }
+
+        // --- MODAL LOGIC ---
+        function closeModal() {
+            document.getElementById('password-modal').style.display = 'none';
+            pendingNoteId = null;
+        }
+
+        async function submitPassword() {
+            const pass = document.getElementById('modal-pass-input').value;
+            const note = notes.find(n => n.id === pendingNoteId);
+            if (!note || !pass) return;
+
+            try {
+                const decryptedText = await decryptContent(note.info, pass);
+                // Success: Open detail view with decrypted text temporarily
+                openDetail(pendingNoteId, decryptedText);
+                closeModal();
+            } catch (e) {
+                document.getElementById('modal-error').style.display = 'block';
+                document.getElementById('modal-pass-input').classList.add('shake');
+                setTimeout(() => document.getElementById('modal-pass-input').classList.remove('shake'), 500);
+            }
+        }
+        
+        // Allow Enter key in modal
+        document.getElementById('modal-pass-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') submitPassword();
+        });
+
+        // --- DETAIL VIEW ---
+        function openDetail(id, decryptedContentOverride = null) {
             currentId = id;
             const note = notes.find(n => n.id === id);
             if (!note) return;
 
             document.getElementById('d-title').textContent = note.title;
             document.getElementById('d-fav-star').style.display = note.isFav ? 'block' : 'none';
-            document.getElementById('d-info').textContent = note.info || "Aucun contenu.";
+            document.getElementById('d-secure-badge').className = `secure-badge ${note.isSecure ? 'visible' : ''}`;
+            
+            // Use override if provided (decrypted), else use stored info (or placeholder)
+            const content = decryptedContentOverride !== null ? decryptedContentOverride : (note.info || "Aucun contenu.");
+            document.getElementById('d-info').textContent = content;
 
             const view = document.getElementById('detail-view');
             view.style.display = 'flex';
@@ -573,8 +770,21 @@
             document.getElementById('f-title').value = note.title;
             document.getElementById('f-cat').value = note.categoryId;
             document.getElementById('f-fav').checked = note.isFav || false;
-            document.getElementById('f-info').value = note.info || '';
+            document.getElementById('f-secure').checked = note.isSecure || false;
             
+            // If secure, we cannot show the content in the textarea nor the password.
+            // We clear the textarea and password field to avoid confusion.
+            // User must re-type content or copy-paste from the view if they want to modify.
+            if (note.isSecure) {
+                document.getElementById('f-info').value = ""; 
+                document.getElementById('f-secure-pass').value = "";
+                alert("Cette note est sécurisée. Pour la modifier, vous devez réécrire le contenu et définir un nouveau mot de passe (ou le même). Le contenu déchiffré n'est pas rechargé dans le formulaire par sécurité.");
+            } else {
+                document.getElementById('f-info').value = note.info || '';
+                document.getElementById('f-secure-pass').value = "";
+            }
+
+            toggleSecureInput();
             document.getElementById('form-title-text').textContent = "Modifier";
             const formView = document.getElementById('form-view');
             formView.style.display = 'flex';
@@ -589,7 +799,11 @@
             document.getElementById('f-title').value = '';
             document.getElementById('f-cat').value = defaultCat ? defaultCat.id : categories[0].id;
             document.getElementById('f-fav').checked = false;
+            document.getElementById('f-secure').checked = false;
             document.getElementById('f-info').value = '';
+            document.getElementById('f-secure-pass').value = '';
+            
+            toggleSecureInput();
             document.getElementById('form-title-text').textContent = "Nouvelle Note";
             
             const formView = document.getElementById('form-view');
@@ -597,17 +811,41 @@
             formView.classList.add('slide-in');
         }
 
-        function saveNote() {
+        function toggleSecureInput() {
+            const isSecure = document.getElementById('f-secure').checked;
+            const container = document.getElementById('secure-password-container');
+            if (isSecure) container.classList.add('visible');
+            else container.classList.remove('visible');
+        }
+
+        async function saveNote() {
             const idVal = document.getElementById('f-id').value;
             const title = document.getElementById('f-title').value.trim();
             
             if (!title) { alert("Le titre est obligatoire."); return; }
 
+            const isSecure = document.getElementById('f-secure').checked;
+            const securePass = document.getElementById('f-secure-pass').value;
+            let finalContent = document.getElementById('f-info').value.trim();
+
+            if (isSecure) {
+                if (!securePass) { alert("Un mot de passe est requis pour une note sécurisée."); return; }
+                if (!finalContent) { alert("Le contenu ne peut pas être vide pour une note sécurisée."); return; }
+                
+                // Encrypt
+                try {
+                    finalContent = await encryptContent(finalContent, securePass);
+                } catch (e) {
+                    alert("Erreur lors du chiffrement."); return;
+                }
+            }
+
             const newData = {
                 title: title,
                 categoryId: parseInt(document.getElementById('f-cat').value),
                 isFav: document.getElementById('f-fav').checked,
-                info: document.getElementById('f-info').value.trim()
+                isSecure: isSecure,
+                info: finalContent
             };
 
             if (idVal) {
@@ -631,8 +869,7 @@
             }
         }
 
-        // --- GESTION CATÉGORIES ---
-
+        // --- CATEGORIES (Same as before) ---
         function openCatManager() {
             renderCatList();
             const view = document.getElementById('cat-manager-view');
@@ -643,30 +880,19 @@
         function renderCatList() {
             const container = document.getElementById('cat-list-container');
             container.innerHTML = '';
-            
             const sortedCats = [...categories].sort((a, b) => a.name.localeCompare(b.name, 'fr', { sensitivity: 'base' }));
             
             sortedCats.forEach(cat => {
                 const isDefault = cat.name === DEFAULT_CAT_NAME;
                 const item = document.createElement('div');
                 item.className = 'cat-list-item';
-                
                 let actionsHtml = '';
                 if (!isDefault) {
-                    actionsHtml = `
-                        <div class="cat-actions">
-                            <button class="btn-edit-cat" onclick="editCategory(${cat.id})">Modifier</button>
-                            <button class="btn-del-cat" onclick="deleteCategory(${cat.id})">Suppr.</button>
-                        </div>
-                    `;
+                    actionsHtml = `<div class="cat-actions"><button class="btn-edit-cat" onclick="editCategory($${cat.id})">Modifier</button><button class="btn-del-cat" onclick="deleteCategory($${cat.id})">Suppr.</button></div>`;
                 } else {
                     actionsHtml = `<span style="font-size:12px; color:#8E8E93; font-style:italic;">Système</span>`;
                 }
-
-                item.innerHTML = `
-                    <div class="cat-name">${cat.name}</div>
-                    ${actionsHtml}
-                `;
+                item.innerHTML = `<div class="cat-name">$${cat.name}</div>$${actionsHtml}`;
                 container.appendChild(item);
             });
         }
@@ -674,10 +900,7 @@
         function createNewCategory() {
             const name = prompt("Nom de la nouvelle catégorie :");
             if (name && name.trim() !== "") {
-                if (categories.find(c => c.name.toLowerCase() === name.trim().toLowerCase())) {
-                    alert("Cette catégorie existe déjà.");
-                    return;
-                }
+                if (categories.find(c => c.name.toLowerCase() === name.trim().toLowerCase())) { alert("Cette catégorie existe déjà."); return; }
                 categories.push({ id: Date.now(), name: name.trim() });
                 saveAll();
                 renderCatList();
@@ -689,10 +912,7 @@
             if (!cat) return;
             const newName = prompt("Nouveau nom :", cat.name);
             if (newName && newName.trim() !== "") {
-                if (categories.find(c => c.name.toLowerCase() === newName.trim().toLowerCase() && c.id !== id)) {
-                    alert("Cette catégorie existe déjà.");
-                    return;
-                }
+                if (categories.find(c => c.name.toLowerCase() === newName.trim().toLowerCase() && c.id !== id)) { alert("Cette catégorie existe déjà."); return; }
                 cat.name = newName.trim();
                 saveAll();
                 renderCatList();
@@ -702,79 +922,52 @@
         function deleteCategory(id) {
             const cat = categories.find(c => c.id === id);
             if (!cat || cat.name === DEFAULT_CAT_NAME) return;
-            
-            if (confirm(`Supprimer la catégorie "${cat.name}" ?\nLes notes associées seront déplacées vers "${DEFAULT_CAT_NAME}".`)) {
+            if (confirm(`Supprimer la catégorie "$${cat.name}" ?\nLes notes associées seront déplacées vers "$${DEFAULT_CAT_NAME}".`)) {
                 const defaultCat = categories.find(c => c.name === DEFAULT_CAT_NAME);
-                notes.forEach(note => {
-                    if (note.categoryId === id) note.categoryId = defaultCat.id;
-                });
+                notes.forEach(note => { if (note.categoryId === id) note.categoryId = defaultCat.id; });
                 categories = categories.filter(c => c.id !== id);
                 saveAll();
                 renderCatList();
             }
         }
 
-        // --- EXPORT / IMPORT (Format Pur Notes) ---
+        // --- EXPORT / IMPORT ---
         function exportData() {
-            const data = { 
-                app: "MesNotes", 
-                version: 1, 
-                notes: notes, 
-                categories: categories 
-            };
+            const data = { app: "MesNotesSecure", version: 2, notes: notes, categories: categories };
             const dataStr = JSON.stringify(data, null, 2);
             const blob = new Blob([dataStr], { type: "application/json" });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
             const now = new Date();
-            const dateStr = now.toISOString().slice(0,10);
-            const timeStr = now.toTimeString().slice(0,5).replace(':', '-');
-            a.download = `mes_notes_${dateStr}_${timeStr}.json`;
+            a.download = `mes_notes_secure_${now.toISOString().slice(0,10)}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            alert("Sauvegarde effectuée : " + a.download);
+            alert("Sauvegarde effectuée !");
         }
 
-        function triggerImport() {
-            document.getElementById('file-input').click();
-        }
+        function triggerImport() { document.getElementById('file-input').click(); }
 
         function importData(input) {
             const file = input.files[0];
             if (!file) return;
-            
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const data = JSON.parse(e.target.result);
-                    
-                    // Vérification stricte du format "Notes"
-                    if (data.app === "MesNotes" && data.version === 1 && Array.isArray(data.notes) && Array.isArray(data.categories)) {
-                        // On écrase tout proprement
+                    if (data.app === "MesNotesSecure" && data.version === 2 && Array.isArray(data.notes) && Array.isArray(data.categories)) {
                         categories = data.categories;
                         notes = data.notes;
-                        
-                        // Sécurité catégorie par défaut
-                        if (!categories.find(c => c.name === DEFAULT_CAT_NAME)) {
-                            categories.unshift({ id: Date.now(), name: DEFAULT_CAT_NAME });
-                        }
-
+                        if (!categories.find(c => c.name === DEFAULT_CAT_NAME)) categories.unshift({ id: Date.now(), name: DEFAULT_CAT_NAME });
                         saveAll();
-                        alert("Restauration réussie !\n" + categories.length + " catégories et " + notes.length + " notes importées.");
-                        
-                        closeView('detail-view'); 
-                        closeView('form-view'); 
-                        closeView('cat-manager-view');
+                        alert("Restauration réussie !");
+                        closeView('detail-view'); closeView('form-view'); closeView('cat-manager-view');
                     } else {
-                        alert("Format invalide. Ce fichier ne semble pas provenir de l'application 'Mes Notes' (ou est trop ancien).");
+                        alert("Format invalide ou version incompatible.");
                     }
-                } catch (err) {
-                    console.error(err);
-                    alert("Erreur de lecture du fichier JSON.");
-                }
+                } catch (err) { alert("Erreur de lecture du fichier."); }
                 input.value = '';
             };
             reader.readAsText(file);
@@ -784,10 +977,13 @@
             const view = document.getElementById(viewId);
             view.style.display = 'none';
             view.classList.remove('slide-in');
-            if (viewId === 'detail-view') currentId = null;
+            if (viewId === 'detail-view') currentId = null; // Fin de l'instruction précédente
         }
 
+        // Écouteurs d'événements globaux
         document.getElementById('search-bar').addEventListener('input', () => renderList());
+        
+        // Initialisation au chargement de la page
         init();
     </script>
 </body>
